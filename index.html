@@ -111,12 +111,22 @@
                 padding: 2rem 0;
             }
             
-            /* Cards with blur effect when not in view */
+            /* Each card gets its own 100vh space */
+            #methodology .grid {
+                display: flex;
+                flex-direction: column;
+                gap: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Card wrapper - full viewport height */
             #methodology .glass-card {
                 height: auto;
                 min-height: auto;
                 padding: 2rem !important;
-                margin: 0 !important;
+                margin: 0 1rem !important;
+                margin-top: calc(50vh - 200px) !important;
+                margin-bottom: calc(50vh - 200px) !important;
                 
                 /* Snap behavior */
                 scroll-snap-align: center;
@@ -128,12 +138,15 @@
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 
                 /* Blur effect - will be controlled by JS */
-                transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+                transition: filter 0.25s ease, opacity 0.25s ease, transform 0.25s ease !important;
             }
             
-            /* Cards transition - fast */
-            #methodology .glass-card {
-                transition: filter 0.25s ease, opacity 0.25s ease, transform 0.25s ease !important;
+            /* Default state: cards 2 and 3 are blurred via CSS */
+            #methodology .glass-card:nth-child(2),
+            #methodology .glass-card:nth-child(3) {
+                filter: blur(6px);
+                opacity: 0.3;
+                transform: scale(0.96);
             }
         }
 
