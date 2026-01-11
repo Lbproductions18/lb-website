@@ -1225,21 +1225,40 @@
                 this.y = Math.random() * particleCanvas.height;
                 this.vx = (Math.random() - 0.5) * 0.4;
                 this.vy = (Math.random() - 0.5) * 0.4;
-                this.radius = Math.random() * 1.5 + 0.5;
-                this.depth = Math.random(); // For parallax
                 
-                // Only particles with high depth (close to viewer) get labels
-                this.hasLabel = this.depth > 0.65 && Math.random() > 0.5;
+                // Some particles are much closer (bigger)
+                const isClose = Math.random() > 0.85; // 15% are close
+                this.depth = isClose ? 0.85 + Math.random() * 0.15 : Math.random() * 0.7;
+                this.radius = isClose ? 2 + Math.random() * 1.5 : Math.random() * 1.5 + 0.5;
+                
+                // Close particles always have labels, others sometimes
+                this.hasLabel = isClose || (this.depth > 0.5 && Math.random() > 0.7);
                 this.words = [...dataWords].sort(() => Math.random() - 0.5); // Shuffle words
-                this.wordIndex = index % this.words.length;
+                this.wordIndex = Math.floor(Math.random() * this.words.length); // Random start word
                 this.currentWord = this.words[this.wordIndex];
                 this.displayText = '';
                 this.charIndex = 0;
                 this.isTyping = true;
                 this.isDeleting = false;
                 this.pauseTime = 0;
-                this.typeSpeed = 80 + Math.random() * 60; // Random speed per particle
-                this.lastUpdate = Date.now() - Math.random() * 3000; // Stagger start times
+                
+                // Very different speeds for each particle (desync)
+                this.typeSpeed = 50 + Math.random() * 150; // 50-200ms per char
+                this.deleteSpeed = 30 + Math.random() * 80;
+                this.pauseDuration = 1000 + Math.random() * 4000; // 1-5 seconds pause
+                
+                // Completely random start times (0-10 seconds offset)
+                this.lastUpdate = Date.now() - Math.random() * 10000;
+                
+                // Some start already mid-word or deleting
+                if (Math.random() > 0.5) {
+                    this.charIndex = Math.floor(Math.random() * this.currentWord.length);
+                    this.displayText = this.currentWord.substring(0, this.charIndex);
+                }
+                if (Math.random() > 0.7) {
+                    this.isTyping = false;
+                    this.isDeleting = true;
+                }
             }
 
             updateTypewriter() {
@@ -1265,13 +1284,13 @@
                         } else {
                             // Done typing, pause then delete
                             this.isTyping = false;
-                            this.pauseTime = 1500 + Math.random() * 1000;
+                            this.pauseTime = this.pauseDuration + Math.random() * 2000;
                             this.isDeleting = true;
                         }
                         this.lastUpdate = now;
                     }
                 } else if (this.isDeleting) {
-                    if (elapsed > this.typeSpeed * 0.5) {
+                    if (elapsed > this.deleteSpeed) {
                         if (this.charIndex > 0) {
                             this.charIndex--;
                             this.displayText = this.currentWord.substring(0, this.charIndex);
@@ -1281,7 +1300,7 @@
                             this.isTyping = true;
                             this.wordIndex = (this.wordIndex + 1) % this.words.length;
                             this.currentWord = this.words[this.wordIndex];
-                            this.pauseTime = 300 + Math.random() * 500;
+                            this.pauseTime = 200 + Math.random() * 800;
                         }
                         this.lastUpdate = now;
                     }
@@ -1307,30 +1326,32 @@
             draw(parallaxOffset) {
                 const y = this.y - parallaxOffset;
                 
-                // Draw particle dot
+                // Draw particle dot - size based on depth
                 particleCtx.beginPath();
                 particleCtx.arc(this.x, y, this.radius, 0, Math.PI * 2);
-                particleCtx.fillStyle = `rgba(255, 255, 255, ${0.3 + this.depth * 0.4})`;
+                particleCtx.fillStyle = `rgba(255, 255, 255, ${0.2 + this.depth * 0.6})`;
                 particleCtx.fill();
                 
                 // Draw label with typewriter effect
                 if (this.hasLabel && this.displayText) {
-                    // Text opacity based on depth (closer = more visible)
-                    const textOpacity = Math.min((this.depth - 0.65) * 2.5, 0.6);
-                    particleCtx.font = '9px monospace';
+                    // Text size and opacity based on depth (closer = bigger & more visible)
+                    const fontSize = Math.floor(8 + this.depth * 6); // 8-14px
+                    const textOpacity = Math.min(this.depth * 0.8, 0.7);
+                    
+                    particleCtx.font = `${fontSize}px monospace`;
                     particleCtx.textAlign = 'center';
                     
                     // Draw text
                     particleCtx.fillStyle = `rgba(255, 255, 255, ${textOpacity})`;
-                    particleCtx.fillText(this.displayText, this.x, y + 14);
+                    particleCtx.fillText(this.displayText, this.x, y + this.radius + fontSize);
                     
-                    // Draw cursor
+                    // Draw cursor (blinking)
                     if (this.isTyping || this.isDeleting) {
                         const textWidth = particleCtx.measureText(this.displayText).width;
                         const cursorX = this.x + textWidth / 2 + 2;
                         const cursorOpacity = Math.sin(Date.now() / 200) > 0 ? textOpacity : 0;
                         particleCtx.fillStyle = `rgba(255, 255, 255, ${cursorOpacity})`;
-                        particleCtx.fillText('▌', cursorX, y + 14);
+                        particleCtx.fillText('▌', cursorX, y + this.radius + fontSize);
                     }
                 }
             }
