@@ -67,11 +67,21 @@
             overflow-y: auto;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+            /* Aligns snap point below header */
         }
 
         @media (max-width: 768px) {
             .snap-container {
-                scroll-snap-type: y proximity;
+                scroll-snap-type: y mandatory;
+                /* Revert to mandatory to prevent skipping */
+            }
+
+            /* Add internal snap points for cards in tall sections */
+            .glass-card {
+                scroll-snap-align: center;
+                scroll-margin-top: 120px;
+                /* Ensure card isn't hidden by header */
             }
         }
 
