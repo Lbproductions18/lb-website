@@ -131,9 +131,9 @@
                 transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
             }
             
-            /* Cards transition */
+            /* Cards transition - fast */
             #methodology .glass-card {
-                transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s ease !important;
+                transition: filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease !important;
             }
         }
 
@@ -1717,10 +1717,10 @@
                         card.style.opacity = '1';
                         card.style.transform = 'scale(1)';
                     } else {
-                        // Inactive card - blurred and darker (but still visible)
-                        card.style.filter = 'blur(8px)';
-                        card.style.opacity = '0.4';
-                        card.style.transform = 'scale(0.95)';
+                        // Inactive card - slightly blurred and darker (still readable)
+                        card.style.filter = 'blur(3px)';
+                        card.style.opacity = '0.35';
+                        card.style.transform = 'scale(0.97)';
                     }
                 });
             }
@@ -1734,19 +1734,18 @@
             // Also run on window scroll as fallback
             window.addEventListener('scroll', applyBlurEffect, { passive: true });
             
-            // Run on load
-            window.addEventListener('load', () => {
-                setTimeout(applyBlurEffect, 100);
-            });
+            // Run on load - immediate
+            window.addEventListener('load', applyBlurEffect);
             
             // Run on resize
             window.addEventListener('resize', applyBlurEffect);
             
-            // Initial run
-            setTimeout(applyBlurEffect, 500);
+            // Initial run - immediate
+            applyBlurEffect();
             
-            // Run periodically to catch any missed updates
-            setInterval(applyBlurEffect, 500);
+            // Also run after a tiny delay to catch late renders
+            setTimeout(applyBlurEffect, 50);
+            setTimeout(applyBlurEffect, 150);
         })();
     </script>
 </body>
