@@ -1246,7 +1246,7 @@
         <footer class="snap-section py-40 relative" data-section="5">
             <div class="max-w-4xl mx-auto px-6 relative z-10 text-center space-y-16">
                 <div class="space-y-6">
-                    <h2 class="reveal-text text-4xl md:text-6xl font-display font-light text-white tracking-tight">Passez à la prochaine étape de votre <span class="italic font-normal opacity-80 text-glow-pulse">croissance.</span></h2>
+                    <h2 class="reveal-text text-4xl md:text-6xl font-display font-light text-white tracking-tight">Passez à la prochaine étape de votre <span id="footer-typewriter-word" class="italic font-normal text-glow-intense"></span><span id="footer-typewriter-cursor" class="typewriter-cursor">|</span></h2>
                     <p class="reveal-text text-lg text-zinc-600 font-light max-w-xl mx-auto"
                         style="transition-delay: 0.1s">
                         Secure a 45-minute discovery session. Walk away with a blueprint for your automation potential.
@@ -2109,6 +2109,51 @@
             
             // Start the typewriter effect
             setTimeout(typeWriter, 800);
+            
+            // ===== FOOTER TYPEWRITER EFFECT =====
+            const footerWords = ['croissance.', 'efficacité.', 'rentabilité.', 'transformation.', 'évolution.'];
+            let footerWordIndex = 0;
+            let footerCharIndex = 0;
+            let footerIsDeleting = false;
+            let footerCurrentWord = footerWords[0];
+            
+            const footerTypewriterWord = document.getElementById('footer-typewriter-word');
+            
+            function footerTypeWriter() {
+                if (!footerTypewriterWord) return;
+                
+                footerCurrentWord = footerWords[footerWordIndex];
+                
+                if (!footerIsDeleting) {
+                    // Typing
+                    footerTypewriterWord.textContent = footerCurrentWord.substring(0, footerCharIndex + 1);
+                    footerCharIndex++;
+                    
+                    if (footerCharIndex === footerCurrentWord.length) {
+                        // Finished typing, pause then delete
+                        footerIsDeleting = true;
+                        setTimeout(footerTypeWriter, 2500);
+                    } else {
+                        setTimeout(footerTypeWriter, 100);
+                    }
+                } else {
+                    // Deleting
+                    footerTypewriterWord.textContent = footerCurrentWord.substring(0, footerCharIndex - 1);
+                    footerCharIndex--;
+                    
+                    if (footerCharIndex === 0) {
+                        // Finished deleting, move to next word
+                        footerIsDeleting = false;
+                        footerWordIndex = (footerWordIndex + 1) % footerWords.length;
+                        setTimeout(footerTypeWriter, 500);
+                    } else {
+                        setTimeout(footerTypeWriter, 60);
+                    }
+                }
+            }
+            
+            // Start footer typewriter
+            setTimeout(footerTypeWriter, 1200);
         })();
     </script>
 </body>
