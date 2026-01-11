@@ -815,7 +815,7 @@
         <section
             class="snap-section relative min-h-screen flex flex-col items-center justify-center pt-20 px-6 overflow-hidden"
             data-section="0">
-            <!-- Particle labels are now rendered on the canvas with typewriter effect -->
+            <!-- Particle labels with typewriter effect are rendered on the canvas -->
 
             <div class="max-w-5xl mx-auto text-center relative z-10 space-y-12">
                 <div
@@ -1225,14 +1225,13 @@
                 this.y = Math.random() * particleCanvas.height;
                 this.vx = (Math.random() - 0.5) * 0.4;
                 this.vy = (Math.random() - 0.5) * 0.4;
+                this.radius = Math.random() * 1.5 + 0.5;
+                this.depth = Math.random(); // For parallax
                 
-                // Z-axis (depth) - starts random, will animate
-                this.z = Math.random(); // 0 = far, 1 = close
-                this.vz = (Math.random() - 0.5) * 0.008; // Speed varies per particle
-                this.baseRadius = 0.8; // Small base size
+                // More particles get labels (about 25%)
+                this.hasLabel = this.depth > 0.5 && Math.random() > 0.7;
                 
-                // Has label (about 30% of particles)
-                this.hasLabel = Math.random() > 0.7;
+                // Typewriter state
                 this.words = [...dataWords].sort(() => Math.random() - 0.5);
                 this.wordIndex = Math.floor(Math.random() * this.words.length);
                 this.currentWord = this.words[this.wordIndex];
@@ -1242,22 +1241,16 @@
                 this.isDeleting = false;
                 this.pauseTime = 0;
                 
-                // Very different speeds for each particle (desync)
-                this.typeSpeed = 50 + Math.random() * 150;
-                this.deleteSpeed = 30 + Math.random() * 80;
-                this.pauseDuration = 1000 + Math.random() * 4000;
+                // Random speeds for desync effect
+                this.typeSpeed = 80 + Math.random() * 120;
+                this.deleteSpeed = 40 + Math.random() * 60;
+                this.pauseDuration = 2000 + Math.random() * 3000;
+                this.lastUpdate = Date.now() - Math.random() * 5000;
                 
-                // Completely random start times
-                this.lastUpdate = Date.now() - Math.random() * 10000;
-                
-                // Some start mid-word or deleting
+                // Some start mid-word
                 if (Math.random() > 0.5) {
                     this.charIndex = Math.floor(Math.random() * this.currentWord.length);
                     this.displayText = this.currentWord.substring(0, this.charIndex);
-                }
-                if (Math.random() > 0.7) {
-                    this.isTyping = false;
-                    this.isDeleting = true;
                 }
             }
 
@@ -1282,7 +1275,7 @@
                             this.charIndex++;
                         } else {
                             this.isTyping = false;
-                            this.pauseTime = this.pauseDuration + Math.random() * 2000;
+                            this.pauseTime = this.pauseDuration;
                             this.isDeleting = true;
                         }
                         this.lastUpdate = now;
@@ -1297,7 +1290,7 @@
                             this.isTyping = true;
                             this.wordIndex = (this.wordIndex + 1) % this.words.length;
                             this.currentWord = this.words[this.wordIndex];
-                            this.pauseTime = 200 + Math.random() * 800;
+                            this.pauseTime = 300 + Math.random() * 500;
                         }
                         this.lastUpdate = now;
                     }
@@ -1305,24 +1298,11 @@
             }
 
             update(scrollY) {
-                // Move in X and Y
                 this.x += this.vx;
                 this.y += this.vy;
-                
-                // Move in Z (depth) - towards and away from viewer
-                this.z += this.vz;
-                
-                // Bounce Z between 0.05 (very far) and 1.0 (close)
-                if (this.z > 1.0) {
-                    this.z = 1.0;
-                    this.vz *= -1;
-                } else if (this.z < 0.05) {
-                    this.z = 0.05;
-                    this.vz *= -1;
-                }
 
-                // Parallax effect based on current depth
-                const parallaxOffset = scrollY * this.z * 0.1;
+                // Parallax effect based on depth
+                const parallaxOffset = scrollY * this.depth * 0.1;
 
                 if (this.x < 0 || this.x > particleCanvas.width) this.vx *= -1;
                 if (this.y < 0 || this.y > particleCanvas.height) this.vy *= -1;
@@ -1335,36 +1315,25 @@
             draw(parallaxOffset) {
                 const y = this.y - parallaxOffset;
                 
-                // TRUE PERSPECTIVE: z directly controls size
-                // z=0.05 (far) → tiny, z=1.0 (close) → big
-                const currentRadius = this.baseRadius + (this.z * 3); // 0.8 to 3.8px
-                const dotOpacity = 0.1 + this.z * 0.5; // 0.1 to 0.6
-                
                 // Draw particle dot
                 particleCtx.beginPath();
-                particleCtx.arc(this.x, y, currentRadius, 0, Math.PI * 2);
-                particleCtx.fillStyle = `rgba(255, 255, 255, ${dotOpacity})`;
+                particleCtx.arc(this.x, y, this.radius, 0, Math.PI * 2);
+                particleCtx.fillStyle = `rgba(255, 255, 255, ${0.3 + this.depth * 0.4})`;
                 particleCtx.fill();
                 
-                // Draw label - only when close enough (z > 0.3)
-                if (this.hasLabel && this.displayText && this.z > 0.3) {
-                    // Font size scales with Z: 6px at z=0.3, up to 16px at z=1.0
-                    const fontSize = Math.floor(6 + (this.z - 0.3) * 14);
-                    // Opacity fades in: 0 at z=0.3, up to 0.6 at z=1.0
-                    const textOpacity = (this.z - 0.3) * 0.85;
-                    
-                    particleCtx.font = `${fontSize}px monospace`;
+                // Draw label with typewriter effect
+                if (this.hasLabel && this.displayText) {
+                    // Text opacity based on depth (closer = more visible)
+                    const textOpacity = Math.max(0, (this.depth - 0.5) * 1.2);
+                    particleCtx.font = '9px monospace';
                     particleCtx.textAlign = 'center';
-                    particleCtx.fillStyle = `rgba(255, 255, 255, ${textOpacity})`;
-                    particleCtx.fillText(this.displayText, this.x, y + currentRadius + fontSize);
+                    particleCtx.fillStyle = `rgba(255, 255, 255, ${textOpacity * 0.4})`;
+                    particleCtx.fillText(this.displayText, this.x, y + 14);
                     
-                    // Cursor
-                    if (this.isTyping || this.isDeleting) {
+                    // Blinking cursor when typing
+                    if (this.isTyping && Math.sin(Date.now() / 300) > 0) {
                         const textWidth = particleCtx.measureText(this.displayText).width;
-                        const cursorX = this.x + textWidth / 2 + 2;
-                        const cursorOpacity = Math.sin(Date.now() / 200) > 0 ? textOpacity : 0;
-                        particleCtx.fillStyle = `rgba(255, 255, 255, ${cursorOpacity})`;
-                        particleCtx.fillText('▌', cursorX, y + currentRadius + fontSize);
+                        particleCtx.fillText('_', this.x + textWidth/2 + 3, y + 14);
                     }
                 }
             }
@@ -1391,7 +1360,7 @@
                         const opacity = (1 - distance / connectionDistance) * 0.15;
                         particleCtx.beginPath();
                         particleCtx.moveTo(particles[i].x, particles[i].y - parallaxI);
-                        const parallaxJ = particles[j].z * scrollY * 0.1;
+                        const parallaxJ = particles[j].depth * scrollY * 0.1;
                         particleCtx.lineTo(particles[j].x, particles[j].y - parallaxJ);
                         particleCtx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
                         particleCtx.lineWidth = 0.5;
@@ -1402,7 +1371,7 @@
 
             // Draw particles
             particles.forEach(p => {
-                const parallax = p.z * scrollY * 0.1;
+                const parallax = p.depth * scrollY * 0.1;
                 p.draw(parallax);
             });
 
