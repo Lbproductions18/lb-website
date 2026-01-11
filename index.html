@@ -673,7 +673,14 @@
             
             /* Hide floating nodes on mobile */
             .node-container {
-                display: none;
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+            }
+            
+            /* Hide scroll indicator on mobile */
+            .scroll-indicator {
+                display: none !important;
             }
             
             /* Navigation dots - smaller gap */
