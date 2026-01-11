@@ -1227,9 +1227,9 @@
                 this.vy = (Math.random() - 0.5) * 0.4;
                 
                 // Z-axis (depth) - starts random, will animate
-                this.z = Math.random() * 1.5; // 0 = far, 1.5 = very close
-                this.vz = (Math.random() - 0.5) * 0.005; // Faster Z movement
-                this.baseRadius = 1.2; // Base size, will scale with Z
+                this.z = Math.random(); // 0 = far, 1 = close
+                this.vz = (Math.random() - 0.5) * 0.008; // Speed varies per particle
+                this.baseRadius = 0.8; // Small base size
                 
                 // Has label (about 30% of particles)
                 this.hasLabel = Math.random() > 0.7;
@@ -1312,12 +1312,12 @@
                 // Move in Z (depth) - towards and away from viewer
                 this.z += this.vz;
                 
-                // Bounce Z between 0.1 and 1.8 (can get very close)
-                if (this.z > 1.8) {
-                    this.z = 1.8;
+                // Bounce Z between 0.05 (very far) and 1.0 (close)
+                if (this.z > 1.0) {
+                    this.z = 1.0;
                     this.vz *= -1;
-                } else if (this.z < 0.1) {
-                    this.z = 0.1;
+                } else if (this.z < 0.05) {
+                    this.z = 0.05;
                     this.vz *= -1;
                 }
 
@@ -1335,27 +1335,28 @@
             draw(parallaxOffset) {
                 const y = this.y - parallaxOffset;
                 
-                // Scale everything based on current Z depth (bigger range)
-                const scale = 0.3 + this.z * 2; // 0.3x to 3.9x when very close
-                const currentRadius = this.baseRadius * scale;
-                const opacity = Math.min(0.1 + this.z * 0.4, 0.85); // More visible when close
+                // TRUE PERSPECTIVE: z directly controls size
+                // z=0.05 (far) → tiny, z=1.0 (close) → big
+                const currentRadius = this.baseRadius + (this.z * 3); // 0.8 to 3.8px
+                const dotOpacity = 0.1 + this.z * 0.5; // 0.1 to 0.6
                 
                 // Draw particle dot
                 particleCtx.beginPath();
                 particleCtx.arc(this.x, y, currentRadius, 0, Math.PI * 2);
-                particleCtx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+                particleCtx.fillStyle = `rgba(255, 255, 255, ${dotOpacity})`;
                 particleCtx.fill();
                 
-                // Draw label - visible when z > 0.5
-                if (this.hasLabel && this.displayText && this.z > 0.5) {
-                    // Scale text with depth - bigger base size
-                    const fontSize = Math.floor(9 * scale); // 9px base, scales with Z (up to ~35px when very close)
-                    const textOpacity = Math.min((this.z - 0.5) * 0.6, 0.75); // Fade in as it gets closer
+                // Draw label - only when close enough (z > 0.3)
+                if (this.hasLabel && this.displayText && this.z > 0.3) {
+                    // Font size scales with Z: 6px at z=0.3, up to 16px at z=1.0
+                    const fontSize = Math.floor(6 + (this.z - 0.3) * 14);
+                    // Opacity fades in: 0 at z=0.3, up to 0.6 at z=1.0
+                    const textOpacity = (this.z - 0.3) * 0.85;
                     
                     particleCtx.font = `${fontSize}px monospace`;
                     particleCtx.textAlign = 'center';
                     particleCtx.fillStyle = `rgba(255, 255, 255, ${textOpacity})`;
-                    particleCtx.fillText(this.displayText, this.x, y + currentRadius + fontSize + 4);
+                    particleCtx.fillText(this.displayText, this.x, y + currentRadius + fontSize);
                     
                     // Cursor
                     if (this.isTyping || this.isDeleting) {
@@ -1363,7 +1364,7 @@
                         const cursorX = this.x + textWidth / 2 + 2;
                         const cursorOpacity = Math.sin(Date.now() / 200) > 0 ? textOpacity : 0;
                         particleCtx.fillStyle = `rgba(255, 255, 255, ${cursorOpacity})`;
-                        particleCtx.fillText('▌', cursorX, y + currentRadius + fontSize + 4);
+                        particleCtx.fillText('▌', cursorX, y + currentRadius + fontSize);
                     }
                 }
             }
