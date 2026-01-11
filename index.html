@@ -72,13 +72,14 @@
         }
 
         @media (max-width: 768px) {
-            /* Mobile: use proximity snap for smoother experience */
+            /* Mobile: keep mandatory snap for section-by-section */
             .snap-container {
-                scroll-snap-type: y proximity;
+                scroll-snap-type: y mandatory;
             }
             
             .snap-section {
                 scroll-snap-align: start;
+                scroll-snap-stop: always;
             }
         }
 
@@ -530,17 +531,19 @@
                 line-height: 1.1;
             }
             
-            /* Remove min-height constraint on mobile for better content fit */
+            /* Keep min-height for snap to work, but adjust padding */
             .snap-section {
-                min-height: auto;
+                min-height: 100vh;
                 padding-top: 100px;
                 padding-bottom: 60px;
+                justify-content: flex-start;
             }
             
-            /* First section (hero) keeps full height */
+            /* Hero section - centered content */
             .snap-section:first-of-type {
                 min-height: 100vh;
                 padding-top: 80px;
+                justify-content: center;
             }
             
             /* Stats section - center content */
