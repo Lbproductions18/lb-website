@@ -1146,13 +1146,13 @@
         resizeMeshCanvas();
         window.addEventListener('resize', resizeMeshCanvas);
 
-        // Aurora Mists - Mint pale (#99FFCC) and Glacier blue (#CCEEFF) with very low opacity
+        // Aurora Mists - Pure white/grey tones
         const orbs = [
-            { x: 0.15, y: 0.1, vx: 0.0001, vy: 0.00008, radius: 0.7, color: 'rgba(153, 255, 204, 0.08)' }, // Mint
-            { x: 0.85, y: 0.2, vx: -0.00008, vy: 0.0001, radius: 0.6, color: 'rgba(204, 238, 255, 0.08)' }, // Glacier blue
-            { x: 0.5, y: 0.6, vx: 0.00008, vy: -0.00008, radius: 0.65, color: 'rgba(153, 255, 204, 0.06)' }, // Mint
-            { x: 0.2, y: 0.85, vx: 0.0001, vy: 0.00006, radius: 0.5, color: 'rgba(204, 238, 255, 0.07)' }, // Glacier blue
-            { x: 0.7, y: 0.7, vx: -0.00006, vy: -0.0001, radius: 0.45, color: 'rgba(180, 255, 230, 0.05)' }, // Mix
+            { x: 0.15, y: 0.1, vx: 0.0001, vy: 0.00008, radius: 0.7, color: 'rgba(255, 255, 255, 0.04)' },
+            { x: 0.85, y: 0.2, vx: -0.00008, vy: 0.0001, radius: 0.6, color: 'rgba(255, 255, 255, 0.03)' },
+            { x: 0.5, y: 0.6, vx: 0.00008, vy: -0.00008, radius: 0.65, color: 'rgba(255, 255, 255, 0.035)' },
+            { x: 0.2, y: 0.85, vx: 0.0001, vy: 0.00006, radius: 0.5, color: 'rgba(255, 255, 255, 0.03)' },
+            { x: 0.7, y: 0.7, vx: -0.00006, vy: -0.0001, radius: 0.45, color: 'rgba(255, 255, 255, 0.025)' },
         ];
 
         function drawMeshGradient() {
@@ -1234,7 +1234,7 @@
                 this.baseY = this.y;
                 this.vx = (Math.random() - 0.5) * 0.3;
                 this.vy = (Math.random() - 0.5) * 0.3;
-                this.radius = 4 + Math.random() * 4; // 4-8px
+                this.radius = 2 + Math.random() * 2; // 2-4px
                 this.depth = Math.random();
                 this.label = dataWords[index % dataWords.length];
                 this.hasLabel = Math.random() > 0.6;
@@ -1347,11 +1347,6 @@
             starDust.push(new StarParticle());
         }
 
-        // ===== 3. SCANNING LINE =====
-        let scanLineY = -100;
-        let scanLineActive = false;
-        let lastScanTime = Date.now();
-        const scanInterval = 8000; // Every 8 seconds
 
         // ===== MAIN DRAW LOOP =====
         function drawParticles() {
@@ -1408,30 +1403,6 @@
                 const mouseDist = Math.sqrt((particleMouseX - node.x) ** 2 + (particleMouseY - node.y) ** 2);
                 node.draw(parallax, mouseDist < 100);
             });
-
-            // Scanning line effect
-            const now = Date.now();
-            if (now - lastScanTime > scanInterval) {
-                scanLineActive = true;
-                scanLineY = -20;
-                lastScanTime = now;
-            }
-            
-            if (scanLineActive) {
-                scanLineY += 3;
-                if (scanLineY > particleCanvas.height + 20) {
-                    scanLineActive = false;
-                }
-                
-                // Draw scan line
-                const gradient = particleCtx.createLinearGradient(0, scanLineY - 10, 0, scanLineY + 10);
-                gradient.addColorStop(0, 'rgba(153, 255, 204, 0)');
-                gradient.addColorStop(0.5, 'rgba(153, 255, 204, 0.15)');
-                gradient.addColorStop(1, 'rgba(153, 255, 204, 0)');
-                
-                particleCtx.fillStyle = gradient;
-                particleCtx.fillRect(0, scanLineY - 10, particleCanvas.width, 20);
-            }
 
             requestAnimationFrame(drawParticles);
         }
