@@ -380,6 +380,29 @@
             animation: glowPulse 4s ease-in-out infinite;
         }
 
+        /* Typewriter cursor */
+        .typewriter-cursor {
+            display: inline-block;
+            font-style: normal;
+            font-weight: 200;
+            opacity: 1;
+            animation: cursorBlink 1s ease-in-out infinite;
+            margin-left: 2px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @keyframes cursorBlink {
+            0%, 45% {
+                opacity: 1;
+            }
+            50%, 95% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
         @keyframes glowPulse {
 
             0%,
@@ -835,7 +858,7 @@
 
                 <h1 class="reveal-text text-white text-5xl md:text-7xl lg:text-8xl font-display font-light leading-[1.1] tracking-tight"
                     style="transition-delay: 0.1s">
-                    Un clic vers la <span class="italic font-normal opacity-90 text-glow-pulse">clarté</span>
+                    Un clic vers la <span id="typewriter-word" class="italic font-normal opacity-90 text-glow-pulse"></span><span id="typewriter-cursor" class="typewriter-cursor">|</span>
                 </h1>
 
                 <p class="reveal-text text-sm md:text-lg text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light"
@@ -1876,6 +1899,78 @@
             setTimeout(initBlurState, 100);
             setTimeout(initBlurState, 500);
             setTimeout(initBlurState, 1000);
+        })();
+    </script>
+
+    <!-- Typewriter Effect -->
+    <script>
+        (function() {
+            const words = ['clarté', 'liberté', 'efficacité', 'simplicité', 'sérénité'];
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let isPaused = false;
+            
+            const typewriterWord = document.getElementById('typewriter-word');
+            const typewriterCursor = document.getElementById('typewriter-cursor');
+            
+            // Typing speeds (ms)
+            const typeSpeed = 80;
+            const deleteSpeed = 50;
+            const pauseAfterWord = 2500;  // Pause when word is complete
+            const pauseBeforeType = 400;  // Pause before typing new word
+            
+            function typeWriter() {
+                if (!typewriterWord) return;
+                
+                const currentWord = words[wordIndex];
+                
+                if (isPaused) {
+                    return;
+                }
+                
+                if (!isDeleting) {
+                    // Typing
+                    typewriterWord.textContent = currentWord.substring(0, charIndex + 1);
+                    charIndex++;
+                    
+                    if (charIndex === currentWord.length) {
+                        // Word complete - pause before deleting
+                        isPaused = true;
+                        setTimeout(() => {
+                            isPaused = false;
+                            isDeleting = true;
+                            typeWriter();
+                        }, pauseAfterWord);
+                        return;
+                    }
+                    
+                    setTimeout(typeWriter, typeSpeed);
+                } else {
+                    // Deleting
+                    typewriterWord.textContent = currentWord.substring(0, charIndex - 1);
+                    charIndex--;
+                    
+                    if (charIndex === 0) {
+                        // Word deleted - move to next word
+                        isDeleting = false;
+                        wordIndex = (wordIndex + 1) % words.length;
+                        
+                        // Pause before typing new word
+                        isPaused = true;
+                        setTimeout(() => {
+                            isPaused = false;
+                            typeWriter();
+                        }, pauseBeforeType);
+                        return;
+                    }
+                    
+                    setTimeout(typeWriter, deleteSpeed);
+                }
+            }
+            
+            // Start the typewriter effect
+            setTimeout(typeWriter, 800);
         })();
     </script>
 </body>
