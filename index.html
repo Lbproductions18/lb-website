@@ -72,7 +72,7 @@
         }
 
         @media (max-width: 768px) {
-            /* Mobile: keep mandatory snap for section-by-section */
+            /* Mobile: keep mandatory snap */
             .snap-container {
                 scroll-snap-type: y mandatory;
             }
@@ -80,6 +80,22 @@
             .snap-section {
                 scroll-snap-align: start;
                 scroll-snap-stop: always;
+            }
+            
+            /* Protocol section - each card is a snap point */
+            #methodology {
+                min-height: auto !important;
+                scroll-snap-align: none;
+            }
+            
+            #methodology .glass-card {
+                scroll-snap-align: start;
+                scroll-snap-stop: always;
+                scroll-margin-top: 80px;
+                min-height: 80vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
         }
 
@@ -582,10 +598,10 @@
                 font-size: 2rem;
             }
             
-            /* Protocol cards */
+            /* Protocol cards - stacked with space for snap */
             .grid.md\\:grid-cols-3 {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+                gap: 0;
             }
             
             /* About section - stack image and text */
