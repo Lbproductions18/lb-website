@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html class="dark" lang="fr">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Luca Optimization - Deep Tech Optimization 2026</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -35,11 +39,11 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         html {
             scroll-behavior: smooth;
         }
-        
+
         body {
             background-color: #030303;
             color: #71717a;
@@ -47,20 +51,30 @@
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
-        
+
         /* Full page scroll snapping */
         body.snap-enabled {
             overflow-y: hidden;
             height: 100vh;
+            /* Fallback */
+            height: 100dvh;
         }
-        
+
         .snap-container {
             height: 100vh;
+            /* Fallback */
+            height: 100dvh;
             overflow-y: auto;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
         }
-        
+
+        @media (max-width: 768px) {
+            .snap-container {
+                scroll-snap-type: y proximity;
+            }
+        }
+
         .snap-section {
             scroll-snap-align: start;
             scroll-snap-stop: always;
@@ -70,7 +84,7 @@
             justify-content: center;
             position: relative;
         }
-        
+
         .snap-section-auto {
             scroll-snap-align: start;
             scroll-snap-stop: always;
@@ -78,17 +92,18 @@
             padding-top: 5vh;
             padding-bottom: 5vh;
         }
-        
+
         /* Section transition animations */
-        .snap-section, .snap-section-auto {
+        .snap-section,
+        .snap-section-auto {
             opacity: 1;
             transition: opacity 0.3s ease;
         }
-        
+
         .snap-section.transitioning {
             opacity: 0.7;
         }
-        
+
         ::selection {
             background: rgba(255, 255, 255, 0.2);
         }
@@ -104,7 +119,7 @@
             flex-direction: column;
             gap: 1rem;
         }
-        
+
         .section-nav-dot {
             width: 10px;
             height: 10px;
@@ -115,7 +130,7 @@
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
-        
+
         .section-nav-dot::before {
             content: attr(data-label);
             position: absolute;
@@ -131,27 +146,27 @@
             pointer-events: none;
             font-weight: 600;
         }
-        
+
         .section-nav-dot:hover::before {
             color: rgba(255, 255, 255, 0.6);
             right: 28px;
         }
-        
+
         .section-nav-dot:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.2);
         }
-        
+
         .section-nav-dot.active {
             background: rgba(255, 255, 255, 0.9);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.4), 0 0 30px rgba(255, 255, 255, 0.1);
             transform: scale(1.3);
         }
-        
+
         .section-nav-dot.active::before {
             color: rgba(255, 255, 255, 0.8);
         }
-        
+
         /* Progress line between dots */
         .section-nav-progress {
             position: absolute;
@@ -163,22 +178,24 @@
             background: rgba(255, 255, 255, 0.1);
             z-index: -1;
         }
-        
+
         .section-nav-progress-fill {
             width: 100%;
             background: rgba(255, 255, 255, 0.4);
             transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
+
         @media (max-width: 768px) {
             .section-nav {
                 right: 1rem;
                 gap: 0.75rem;
             }
+
             .section-nav-dot {
                 width: 8px;
                 height: 8px;
             }
+
             .section-nav-dot::before {
                 display: none;
             }
@@ -217,7 +234,7 @@
             transform-style: preserve-3d;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .glass-card::before {
             content: '';
             position: absolute;
@@ -225,17 +242,15 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(
-                800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                rgba(255, 255, 255, 0.06),
-                transparent 40%
-            );
+            background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                    rgba(255, 255, 255, 0.06),
+                    transparent 40%);
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
             z-index: 1;
         }
-        
+
         .glass-card:hover::before {
             opacity: 1;
         }
@@ -248,11 +263,9 @@
             left: -1px;
             right: -1px;
             bottom: -1px;
-            background: radial-gradient(
-                400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                rgba(255, 255, 255, 0.3),
-                transparent 40%
-            );
+            background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                    rgba(255, 255, 255, 0.3),
+                    transparent 40%);
             border-radius: inherit;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -263,7 +276,7 @@
             -webkit-mask-composite: xor;
             padding: 1px;
         }
-        
+
         .glass-card:hover::after {
             opacity: 1;
         }
@@ -279,14 +292,21 @@
         .text-glow {
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
         }
-        
+
         .text-glow-pulse {
             animation: glowPulse 4s ease-in-out infinite;
         }
-        
+
         @keyframes glowPulse {
-            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.15); }
-            50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.1); }
+
+            0%,
+            100% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+            }
+
+            50% {
+                text-shadow: 0 0 40px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.1);
+            }
         }
 
         /* ===== REVEAL ANIMATIONS ===== */
@@ -295,7 +315,7 @@
             transform: translateY(40px);
             filter: blur(10px);
         }
-        
+
         .reveal-text.revealed {
             opacity: 1;
             transform: translateY(0);
@@ -308,7 +328,7 @@
             position: relative;
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
+
         .magnetic-btn::before {
             content: '';
             position: absolute;
@@ -320,11 +340,11 @@
             transition: opacity 0.4s ease;
             z-index: -1;
         }
-        
+
         .magnetic-btn:hover::before {
             opacity: 0.2;
         }
-        
+
         .magnetic-btn-inner {
             display: flex;
             align-items: center;
@@ -337,17 +357,19 @@
         .chart-bar {
             width: 6px;
             border-radius: 9999px;
-            background: linear-gradient(to top, rgba(255,255,255,0.03), rgba(255,255,255,0.4));
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.4));
             transform-origin: bottom;
             transform: scaleY(0);
         }
-        
+
         .chart-bar.animated {
             animation: growBar 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        
+
         @keyframes growBar {
-            to { transform: scaleY(1); }
+            to {
+                transform: scaleY(1);
+            }
         }
 
         /* ===== PROGRESS CIRCLE ===== */
@@ -361,13 +383,15 @@
             stroke-dasharray: 200;
             stroke-dashoffset: 200;
         }
-        
+
         .flow-line.animated {
             animation: drawLine 2s ease forwards;
         }
-        
+
         @keyframes drawLine {
-            to { stroke-dashoffset: 0; }
+            to {
+                stroke-dashoffset: 0;
+            }
         }
 
         /* ===== COUNTER ===== */
@@ -381,7 +405,7 @@
             transform: translateY(20px);
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
+
         .node-container.visible {
             opacity: 1;
             transform: translateY(0);
@@ -395,15 +419,22 @@
             box-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.2);
             animation: dotPulse 3s ease-in-out infinite;
         }
-        
+
         @keyframes dotPulse {
-            0%, 100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.2); }
-            50% { box-shadow: 0 0 12px rgba(255, 255, 255, 0.7), 0 0 25px rgba(255, 255, 255, 0.3); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 12px rgba(255, 255, 255, 0.7), 0 0 25px rgba(255, 255, 255, 0.3);
+            }
         }
 
         .node-line {
             width: 1px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
         }
 
         /* ===== MATRIX TYPEWRITER TEXT ===== */
@@ -414,7 +445,7 @@
             position: relative;
             display: inline-block;
         }
-        
+
         .matrix-text::after {
             content: '▌';
             animation: cursorBlink 1s step-end infinite;
@@ -422,12 +453,20 @@
             margin-left: 2px;
             font-size: 0.9em;
         }
-        
+
         @keyframes cursorBlink {
-            0%, 45% { opacity: 0.5; }
-            50%, 100% { opacity: 0; }
+
+            0%,
+            45% {
+                opacity: 0.5;
+            }
+
+            50%,
+            100% {
+                opacity: 0;
+            }
         }
-        
+
         .matrix-text.typing::after {
             animation: none;
             opacity: 0.7;
@@ -437,10 +476,17 @@
         .scroll-indicator {
             animation: scrollBounce 2s ease-in-out infinite;
         }
-        
+
         @keyframes scrollBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(10px);
+            }
         }
 
         /* ===== MATERIAL ICONS ===== */
@@ -450,6 +496,7 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
+
             .glass-card::before,
             .glass-card::after {
                 display: none;
@@ -457,10 +504,11 @@
         }
     </style>
 </head>
+
 <body class="font-sans snap-enabled">
     <!-- Mesh Gradient Canvas -->
     <canvas id="mesh-canvas"></canvas>
-    
+
     <!-- Particle Network Canvas -->
     <canvas id="particle-canvas"></canvas>
 
@@ -480,324 +528,389 @@
     <!-- Snap Scroll Container -->
     <div class="snap-container" id="snap-container">
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-[100] px-6 py-6">
-        <div class="max-w-7xl mx-auto flex items-center justify-between glass-card-thin px-8 py-3 rounded-2xl">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
-                    <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                </div>
-                <span class="text-lg font-display font-medium tracking-tight text-white">LUCA<span class="opacity-40">.SYSTEMS</span></span>
-            </div>
-            <div class="hidden md:flex items-center gap-8">
-                <a class="nav-link text-xs tracking-widest uppercase font-medium text-zinc-500 hover:text-white transition-colors cursor-pointer" data-target="1">Protocol</a>
-                <a class="nav-link text-xs tracking-widest uppercase font-medium text-zinc-500 hover:text-white transition-colors cursor-pointer" data-target="3">Filter</a>
-                <a class="nav-link text-xs tracking-widest uppercase font-medium text-zinc-500 hover:text-white transition-colors cursor-pointer" data-target="4">About</a>
-                <button class="magnetic-btn nav-link text-xs tracking-widest uppercase bg-white text-black px-6 py-2.5 rounded-full font-bold" data-target="5">
-                    <span class="magnetic-btn-inner">Access Session</span>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="snap-section relative min-h-screen flex flex-col items-center justify-center pt-20 px-6 overflow-hidden" data-section="0">
-        <!-- Floating Nodes with Matrix Typewriter Effect -->
-        <div class="absolute inset-0 pointer-events-none overflow-hidden">
-            <div class="node-container absolute top-[30%] left-[15%] flex flex-col items-center">
-                <div class="glowing-dot"></div>
-                <div class="node-line h-32"></div>
-                <span class="matrix-text text-[10px] tracking-[0.25em] text-white/50 mt-2 uppercase font-mono" data-words="Input_Stream,Data_Flux,Process_Node,Flow_Matrix,Sync_Handler,Query_Parse,Signal_Init,Buffer_Load"></span>
-            </div>
-            <div class="node-container absolute top-[20%] right-[20%] flex flex-col items-center">
-                <div class="glowing-dot"></div>
-                <div class="node-line h-48"></div>
-                <span class="matrix-text text-[10px] tracking-[0.25em] text-white/50 mt-2 uppercase font-mono" data-words="Core_Logic,Neural_Mesh,Deep_Process,Auto_Compile,System_Forge,Logic_Weave,Task_Engine,Algo_Core"></span>
-            </div>
-            <div class="node-container absolute bottom-[25%] left-[28%] flex flex-col items-center">
-                <div class="glowing-dot"></div>
-                <div class="node-line h-24"></div>
-                <span class="matrix-text text-[10px] tracking-[0.25em] text-white/50 mt-2 uppercase font-mono" data-words="Optimization,Perf_Boost,Flux_Tuner,Speed_Index,Load_Balance,Async_Pipe,Yield_Max,Cycle_Trim"></span>
-            </div>
-            <!-- Additional floating data nodes -->
-            <div class="node-container absolute top-[55%] right-[10%] flex flex-col items-center">
-                <div class="glowing-dot"></div>
-                <div class="node-line h-20"></div>
-                <span class="matrix-text text-[9px] tracking-[0.2em] text-white/30 mt-2 uppercase font-mono" data-words="0x7F3A,Queue_Pop,Hash_Gen,Bit_Shift,Heap_Sort,Ref_Count,GC_Sweep,Ptr_Deref"></span>
-            </div>
-            <div class="node-container absolute top-[45%] left-[6%] flex flex-col items-center">
-                <div class="glowing-dot"></div>
-                <div class="node-line h-28"></div>
-                <span class="matrix-text text-[9px] tracking-[0.2em] text-white/30 mt-2 uppercase font-mono" data-words="Proc_0x4E,Event_Bus,State_Mut,Ctx_Switch,Fork_Join,Mutex_Lock,Sem_Wait,Atomic_Op"></span>
-            </div>
-            <div class="node-container absolute bottom-[40%] right-[28%] flex flex-col items-center">
-                <div class="glowing-dot"></div>
-                <div class="node-line h-16"></div>
-                <span class="matrix-text text-[9px] tracking-[0.2em] text-white/30 mt-2 uppercase font-mono" data-words="Node_42,Batch_Run,Cron_Tick,Job_Queue,Task_Pool,Work_Steal,Shard_Key,Bloom_Fil"></span>
-            </div>
-        </div>
-
-        <div class="max-w-5xl mx-auto text-center relative z-10 space-y-12">
-            <div class="reveal-text inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[10px] tracking-[0.4em] text-white/60 uppercase">
-                <span class="w-1 h-1 bg-white rounded-full animate-ping"></span>
-                Operational Clarity Engine v.26
-            </div>
-            
-            <h1 class="reveal-text text-white text-6xl md:text-8xl font-display font-light leading-[1.1] tracking-tight" style="transition-delay: 0.1s">
-                One-click for <span class="italic font-normal opacity-90 text-glow-pulse">Clarity</span>
-            </h1>
-            
-            <p class="reveal-text text-lg md:text-xl text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light" style="transition-delay: 0.2s">
-                Engineering deep-tech operational systems for elite SMEs. Eliminating friction through intelligent automation and structural mapping.
-            </p>
-            
-            <div class="reveal-text flex flex-col sm:flex-row items-center justify-center gap-6 pt-4" style="transition-delay: 0.3s">
-                <button class="magnetic-btn px-8 py-4 rounded-full font-medium bg-white text-black w-full sm:w-auto">
-                    <span class="magnetic-btn-inner">Start Strategic Audit</span>
-                </button>
-                <button class="magnetic-btn px-8 py-4 rounded-full font-medium bg-transparent border border-white/20 text-white hover:bg-white/5 w-full sm:w-auto">
-                    <span class="magnetic-btn-inner">Explore Protocol</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="scroll-indicator absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-30 cursor-pointer hover:opacity-60 transition-opacity" onclick="document.querySelectorAll('.snap-section')[1].scrollIntoView({behavior: 'smooth'})">
-            <span class="text-[10px] tracking-[0.5em] uppercase font-bold text-white">Scroll to map</span>
-            <div class="w-px h-12 bg-gradient-to-b from-white to-transparent"></div>
-        </div>
-    </section>
-
-    <!-- Methodology Section -->
-    <section class="snap-section py-32 relative" id="methodology" data-section="1">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="mb-24 text-center">
-                <h2 class="reveal-text text-4xl font-display font-light text-white mb-4">The Luca Protocol</h2>
-                <div class="reveal-text w-24 h-px bg-white/20 mx-auto" style="transition-delay: 0.1s"></div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <!-- Card 1 -->
-                <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 01</span>
-                        <span class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">query_stats</span>
-                    </div>
-                    <div class="space-y-4">
-                        <h3 class="text-xl font-medium text-white">Quantum Diagnostic</h3>
-                        <p class="text-sm text-zinc-600 leading-relaxed font-light">Deep flow audit and friction mapping. We measure the invisible to optimize the concrete.</p>
-                    </div>
-                    <div class="flex items-end gap-1.5 h-16 pt-4">
-                        <div class="chart-bar h-[40%]" data-delay="0"></div>
-                        <div class="chart-bar h-[70%]" data-delay="0.1"></div>
-                        <div class="chart-bar h-[55%]" data-delay="0.2"></div>
-                        <div class="chart-bar h-[90%]" data-delay="0.3"></div>
-                        <div class="chart-bar h-[65%]" data-delay="0.4"></div>
-                        <div class="chart-bar h-[100%]" data-delay="0.5"></div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 02</span>
-                        <span class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">hub</span>
-                    </div>
-                    <div class="space-y-4">
-                        <h3 class="text-xl font-medium text-white">Neural Architecture</h3>
-                        <p class="text-sm text-zinc-600 leading-relaxed font-light">Design of a bespoke ecosystem merging Gen-AI with robust No-Code infrastructure.</p>
-                    </div>
-                    <div class="relative w-16 h-16 flex items-center justify-center">
-                        <svg class="absolute inset-0 w-full h-full -rotate-90">
-                            <circle class="text-white/5" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="1.5"></circle>
-                            <circle class="progress-circle text-white/40" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175" stroke-linecap="round" stroke-width="2" data-target="60"></circle>
-                        </svg>
-                        <span class="text-[10px] font-bold text-white/60 counter" data-target="65" data-suffix="%">0%</span>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 03</span>
-                        <span class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">speed</span>
-                    </div>
-                    <div class="space-y-4">
-                        <h3 class="text-xl font-medium text-white">Agile Deployment</h3>
-                        <p class="text-sm text-zinc-600 leading-relaxed font-light">Orchestrated production launch and KPI steering to ensure immediate ROI.</p>
-                    </div>
-                    <div class="h-16 flex items-center relative overflow-hidden">
-                        <svg class="w-full h-8 fill-none" viewBox="0 0 100 20">
-                            <path class="flow-line stroke-white/30" d="M0 10 Q 25 2, 50 10 T 100 10" stroke-width="0.5"></path>
-                            <path class="flow-line stroke-white/10" d="M0 15 Q 25 5, 50 15 T 100 15" stroke-width="0.5" style="animation-delay: 0.3s"></path>
-                        </svg>
-                        <div class="absolute right-0 w-1 h-1 bg-white rounded-full animate-ping"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="snap-section py-20 relative overflow-hidden border-y border-white/[0.05] flex items-center" id="stats" data-section="2">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-                <div class="space-y-2">
-                    <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
-                        <span class="counter" data-target="40" data-prefix="+" data-suffix="%">0%</span>
-                    </div>
-                    <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">Productivity</div>
-                </div>
-                <div class="space-y-2">
-                    <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
-                        <span class="counter" data-target="150" data-suffix="h">0h</span>
-                    </div>
-                    <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">Saved Monthly</div>
-                </div>
-                <div class="space-y-2">
-                    <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
-                        <span class="counter" data-target="6" data-suffix="m">0m</span>
-                    </div>
-                    <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">ROI Guarantee</div>
-                </div>
-                <div class="space-y-2">
-                    <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
-                        <span class="counter" data-target="30" data-suffix="+">0+</span>
-                    </div>
-                    <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">Elite Clients</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Expertise Section -->
-    <section class="snap-section py-32" id="expertise" data-section="3">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <!-- Target Profile -->
-                <div class="glass-card rounded-[2.5rem] p-12 md:p-16 relative overflow-hidden tilt-card">
-                    <div class="absolute -top-20 -right-20 w-60 h-60 bg-white/[0.03] blur-[100px] rounded-full pointer-events-none"></div>
-                    <div class="absolute top-0 right-0 p-8 opacity-20">
-                        <span class="material-symbols-outlined !text-6xl">check_circle</span>
-                    </div>
-                    <h3 class="reveal-text text-2xl font-display font-medium text-white mb-12 flex items-center gap-4">
-                        <span class="w-8 h-px bg-white/30"></span> Target Profile
-                    </h3>
-                    <div class="space-y-10">
-                        <div class="reveal-text flex items-start gap-6" style="transition-delay: 0.1s">
-                            <div class="text-2xl font-display font-light text-white text-glow">+10</div>
-                            <div>
-                                <h4 class="text-white font-medium">Headcount Threshold</h4>
-                                <p class="text-sm text-zinc-600 mt-1">Structured teams ready for scale-up automation.</p>
-                            </div>
-                        </div>
-                        <div class="reveal-text flex items-start gap-6" style="transition-delay: 0.2s">
-                            <div class="text-2xl font-display font-light text-white text-glow">+1M$</div>
-                            <div>
-                                <h4 class="text-white font-medium">Annual Revenue</h4>
-                                <p class="text-sm text-zinc-600 mt-1">High-volume operations requiring precision engines.</p>
-                            </div>
-                        </div>
-                        <div class="reveal-text flex items-start gap-6" style="transition-delay: 0.3s">
-                            <div class="text-2xl font-display font-light text-white text-glow">Long</div>
-                            <div>
-                                <h4 class="text-white font-medium">Growth Vision</h4>
-                                <p class="text-sm text-zinc-600 mt-1">Commitment to building a sustainable tech infrastructure.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Out of Scope -->
-                <div class="glass-card rounded-[2.5rem] p-12 md:p-16 opacity-50 relative overflow-hidden tilt-card">
-                    <div class="absolute -top-20 -left-20 w-40 h-40 bg-white/[0.02] blur-[80px] rounded-full pointer-events-none"></div>
-                    <div class="absolute top-0 right-0 p-8 opacity-20">
-                        <span class="material-symbols-outlined !text-6xl text-red-500/50">block</span>
-                    </div>
-                    <h3 class="reveal-text text-2xl font-display font-medium text-white/60 mb-12 flex items-center gap-4">
-                        <span class="w-8 h-px bg-white/10"></span> Out of Scope
-                    </h3>
-                    <ul class="space-y-8">
-                        <li class="reveal-text flex items-center gap-4 text-zinc-600" style="transition-delay: 0.1s">
-                            <span class="material-symbols-outlined text-xs">close</span>
-                            Early-stage startups (pre-seed)
-                        </li>
-                        <li class="reveal-text flex items-center gap-4 text-zinc-600" style="transition-delay: 0.2s">
-                            <span class="material-symbols-outlined text-xs">close</span>
-                            One-off "quick-fix" requests
-                        </li>
-                        <li class="reveal-text flex items-center gap-4 text-zinc-600" style="transition-delay: 0.3s">
-                            <span class="material-symbols-outlined text-xs">close</span>
-                            Budgets under 10k€ deployment
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="snap-section py-32" id="about" data-section="4">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col lg:flex-row gap-20 items-center">
-                <div class="flex-1 relative">
-                    <div class="absolute -inset-10 bg-white/[0.03] blur-[120px] rounded-full"></div>
-                    <div class="relative rounded-[2.5rem] overflow-hidden aspect-[4/5] shadow-2xl border border-white/10" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgcXS8RcEOnV_msgkE9VPL7DVT9KTDElBglgutaT592fnO4DVz_7tu_BMGbyr8GTWi7F2UFyEZruHhssKgmkC8xIiRnYzPeXDz011pADSN88fpQa_nwhLMpcYkF72jlUB7Z3BQKiuULPgVvtACSKU3ev8q_vAxmr_tOLBdiVIDzn4aSgoSrT6snV8HL2GYZj5yEyHbIVL5NMyTAVhCM78-64aBAX46Vfqi16qNoz_Pp-CsaaBdsYCqmAix-JZhZUfYC35cIRw-Dxc'); background-size: cover; background-position: top center;">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-transparent"></div>
-                        <div class="absolute bottom-10 left-10 glass-card-thin p-6 rounded-2xl">
-                            <span class="text-white font-display font-medium block">LUCA.</span>
-                            <span class="text-[10px] text-white/40 tracking-[0.3em] uppercase font-bold">Operational Architect</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-1 space-y-10">
-                    <h2 class="reveal-text text-4xl md:text-5xl font-display font-light text-white leading-tight">Expertise serving elite performance.</h2>
-                    <p class="reveal-text text-lg text-zinc-500 leading-relaxed font-light" style="transition-delay: 0.1s">
-                        More than a consultant, I am the <span class="text-white font-medium">technical backbone</span> for leaders targeting excellence. My path in operations has taught me one absolute truth: clarity is the ultimate luxury.
-                    </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-6">
-                        <div class="reveal-text glass-card p-8 rounded-3xl border-l-2 border-white/20 tilt-card" style="transition-delay: 0.2s">
-                            <span class="material-symbols-outlined text-white/60 mb-4">psychology</span>
-                            <h4 class="text-white font-medium mb-1">Human-Centric AI</h4>
-                            <p class="text-xs text-zinc-600 leading-relaxed">AI must serve your talent, not replace it.</p>
-                        </div>
-                        <div class="reveal-text glass-card p-8 rounded-3xl border-l-2 border-white/20 tilt-card" style="transition-delay: 0.3s">
-                            <span class="material-symbols-outlined text-white/60 mb-4">translate</span>
-                            <h4 class="text-white font-medium mb-1">Business First</h4>
-                            <p class="text-xs text-zinc-600 leading-relaxed">Zero jargon. Only tangible, measurable outcomes.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer CTA -->
-    <footer class="snap-section py-40 relative" data-section="5">
-        <div class="max-w-4xl mx-auto px-6 relative z-10 text-center space-y-16">
-            <div class="space-y-6">
-                <h2 class="reveal-text text-5xl md:text-7xl font-display font-light text-white tracking-tight">Ready for the next <span class="italic font-normal opacity-80 text-glow-pulse">level?</span></h2>
-                <p class="reveal-text text-lg text-zinc-600 font-light max-w-xl mx-auto" style="transition-delay: 0.1s">
-                    Secure a 45-minute discovery session. Walk away with a blueprint for your automation potential.
-                </p>
-            </div>
-            <button class="reveal-text magnetic-btn px-16 py-6 bg-white text-black text-lg font-bold rounded-full shadow-[0_0_60px_rgba(255,255,255,0.15)]" style="transition-delay: 0.2s">
-                <span class="magnetic-btn-inner">Book Discovery Session</span>
-            </button>
-            <div class="pt-32 flex flex-col md:flex-row justify-between items-center gap-10 border-t border-white/[0.05]">
+        <!-- Navigation -->
+        <nav class="fixed top-0 w-full z-[100] px-6 py-6">
+            <div class="max-w-7xl mx-auto flex items-center justify-between glass-card-thin px-8 py-3 rounded-2xl">
                 <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center">
-                        <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                    <div class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
+                        <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                     </div>
-                    <span class="text-[10px] tracking-[0.4em] font-bold text-white uppercase">Luca Optimization Boutique © 2026</span>
+                    <span class="text-lg font-display font-medium tracking-tight text-white">LUCA<span
+                            class="opacity-40">.SYSTEMS</span></span>
                 </div>
-                <div class="flex gap-8 text-[10px] tracking-[0.3em] font-bold uppercase text-zinc-600">
-                    <a class="hover:text-white transition-colors" href="#">Legal</a>
-                    <a class="hover:text-white transition-colors" href="#">LinkedIn</a>
-                    <a class="hover:text-white transition-colors" href="#">Privacy</a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a class="nav-link text-xs tracking-widest uppercase font-medium text-zinc-500 hover:text-white transition-colors cursor-pointer"
+                        data-target="1">Protocol</a>
+                    <a class="nav-link text-xs tracking-widest uppercase font-medium text-zinc-500 hover:text-white transition-colors cursor-pointer"
+                        data-target="3">Filter</a>
+                    <a class="nav-link text-xs tracking-widest uppercase font-medium text-zinc-500 hover:text-white transition-colors cursor-pointer"
+                        data-target="4">About</a>
+                    <button
+                        class="magnetic-btn nav-link text-xs tracking-widest uppercase bg-white text-black px-6 py-2.5 rounded-full font-bold"
+                        data-target="5">
+                        <span class="magnetic-btn-inner">Access Session</span>
+                    </button>
                 </div>
             </div>
-        </div>
-    </footer>
+        </nav>
+
+        <!-- Hero Section -->
+        <section
+            class="snap-section relative min-h-screen flex flex-col items-center justify-center pt-20 px-6 overflow-hidden"
+            data-section="0">
+            <!-- Floating Nodes with Matrix Typewriter Effect -->
+            <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                <div class="node-container absolute top-[30%] left-[15%] flex flex-col items-center">
+                    <div class="glowing-dot"></div>
+                    <div class="node-line h-32"></div>
+                    <span class="matrix-text text-[10px] tracking-[0.25em] text-white/50 mt-2 uppercase font-mono"
+                        data-words="Input_Stream,Data_Flux,Process_Node,Flow_Matrix,Sync_Handler,Query_Parse,Signal_Init,Buffer_Load"></span>
+                </div>
+                <div class="node-container absolute top-[20%] right-[20%] flex flex-col items-center">
+                    <div class="glowing-dot"></div>
+                    <div class="node-line h-48"></div>
+                    <span class="matrix-text text-[10px] tracking-[0.25em] text-white/50 mt-2 uppercase font-mono"
+                        data-words="Core_Logic,Neural_Mesh,Deep_Process,Auto_Compile,System_Forge,Logic_Weave,Task_Engine,Algo_Core"></span>
+                </div>
+                <div class="node-container absolute bottom-[25%] left-[28%] flex flex-col items-center">
+                    <div class="glowing-dot"></div>
+                    <div class="node-line h-24"></div>
+                    <span class="matrix-text text-[10px] tracking-[0.25em] text-white/50 mt-2 uppercase font-mono"
+                        data-words="Optimization,Perf_Boost,Flux_Tuner,Speed_Index,Load_Balance,Async_Pipe,Yield_Max,Cycle_Trim"></span>
+                </div>
+                <!-- Additional floating data nodes -->
+                <div class="node-container absolute top-[55%] right-[10%] flex flex-col items-center">
+                    <div class="glowing-dot"></div>
+                    <div class="node-line h-20"></div>
+                    <span class="matrix-text text-[9px] tracking-[0.2em] text-white/30 mt-2 uppercase font-mono"
+                        data-words="0x7F3A,Queue_Pop,Hash_Gen,Bit_Shift,Heap_Sort,Ref_Count,GC_Sweep,Ptr_Deref"></span>
+                </div>
+                <div class="node-container absolute top-[45%] left-[6%] flex flex-col items-center">
+                    <div class="glowing-dot"></div>
+                    <div class="node-line h-28"></div>
+                    <span class="matrix-text text-[9px] tracking-[0.2em] text-white/30 mt-2 uppercase font-mono"
+                        data-words="Proc_0x4E,Event_Bus,State_Mut,Ctx_Switch,Fork_Join,Mutex_Lock,Sem_Wait,Atomic_Op"></span>
+                </div>
+                <div class="node-container absolute bottom-[40%] right-[28%] flex flex-col items-center">
+                    <div class="glowing-dot"></div>
+                    <div class="node-line h-16"></div>
+                    <span class="matrix-text text-[9px] tracking-[0.2em] text-white/30 mt-2 uppercase font-mono"
+                        data-words="Node_42,Batch_Run,Cron_Tick,Job_Queue,Task_Pool,Work_Steal,Shard_Key,Bloom_Fil"></span>
+                </div>
+            </div>
+
+            <div class="max-w-5xl mx-auto text-center relative z-10 space-y-12">
+                <div
+                    class="reveal-text inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[10px] tracking-[0.4em] text-white/60 uppercase">
+                    <span class="w-1 h-1 bg-white rounded-full animate-ping"></span>
+                    Operational Clarity Engine v.26
+                </div>
+
+                <h1 class="reveal-text text-white text-6xl md:text-8xl font-display font-light leading-[1.1] tracking-tight"
+                    style="transition-delay: 0.1s">
+                    One-click for <span class="italic font-normal opacity-90 text-glow-pulse">Clarity</span>
+                </h1>
+
+                <p class="reveal-text text-lg md:text-xl text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light"
+                    style="transition-delay: 0.2s">
+                    Engineering deep-tech operational systems for elite SMEs. Eliminating friction through intelligent
+                    automation and structural mapping.
+                </p>
+
+                <div class="reveal-text flex flex-col sm:flex-row items-center justify-center gap-6 pt-4"
+                    style="transition-delay: 0.3s">
+                    <button
+                        class="magnetic-btn px-8 py-4 rounded-full font-medium bg-white text-black w-full sm:w-auto">
+                        <span class="magnetic-btn-inner">Start Strategic Audit</span>
+                    </button>
+                    <button
+                        class="magnetic-btn px-8 py-4 rounded-full font-medium bg-transparent border border-white/20 text-white hover:bg-white/5 w-full sm:w-auto">
+                        <span class="magnetic-btn-inner">Explore Protocol</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="scroll-indicator absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-30 cursor-pointer hover:opacity-60 transition-opacity"
+                onclick="document.querySelectorAll('.snap-section')[1].scrollIntoView({behavior: 'smooth'})">
+                <span class="text-[10px] tracking-[0.5em] uppercase font-bold text-white">Scroll to map</span>
+                <div class="w-px h-12 bg-gradient-to-b from-white to-transparent"></div>
+            </div>
+        </section>
+
+        <!-- Methodology Section -->
+        <section class="snap-section py-32 relative" id="methodology" data-section="1">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="mb-24 text-center">
+                    <h2 class="reveal-text text-4xl font-display font-light text-white mb-4">The Luca Protocol</h2>
+                    <div class="reveal-text w-24 h-px bg-white/20 mx-auto" style="transition-delay: 0.1s"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <!-- Card 1 -->
+                    <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 01</span>
+                            <span
+                                class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">query_stats</span>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-xl font-medium text-white">Quantum Diagnostic</h3>
+                            <p class="text-sm text-zinc-600 leading-relaxed font-light">Deep flow audit and friction
+                                mapping. We measure the invisible to optimize the concrete.</p>
+                        </div>
+                        <div class="flex items-end gap-1.5 h-16 pt-4">
+                            <div class="chart-bar h-[40%]" data-delay="0"></div>
+                            <div class="chart-bar h-[70%]" data-delay="0.1"></div>
+                            <div class="chart-bar h-[55%]" data-delay="0.2"></div>
+                            <div class="chart-bar h-[90%]" data-delay="0.3"></div>
+                            <div class="chart-bar h-[65%]" data-delay="0.4"></div>
+                            <div class="chart-bar h-[100%]" data-delay="0.5"></div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 02</span>
+                            <span
+                                class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">hub</span>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-xl font-medium text-white">Neural Architecture</h3>
+                            <p class="text-sm text-zinc-600 leading-relaxed font-light">Design of a bespoke ecosystem
+                                merging Gen-AI with robust No-Code infrastructure.</p>
+                        </div>
+                        <div class="relative w-16 h-16 flex items-center justify-center">
+                            <svg class="absolute inset-0 w-full h-full -rotate-90">
+                                <circle class="text-white/5" cx="32" cy="32" fill="transparent" r="28"
+                                    stroke="currentColor" stroke-width="1.5"></circle>
+                                <circle class="progress-circle text-white/40" cx="32" cy="32" fill="transparent" r="28"
+                                    stroke="currentColor" stroke-dasharray="175" stroke-linecap="round" stroke-width="2"
+                                    data-target="60"></circle>
+                            </svg>
+                            <span class="text-[10px] font-bold text-white/60 counter" data-target="65"
+                                data-suffix="%">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 03</span>
+                            <span
+                                class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">speed</span>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-xl font-medium text-white">Agile Deployment</h3>
+                            <p class="text-sm text-zinc-600 leading-relaxed font-light">Orchestrated production launch
+                                and KPI steering to ensure immediate ROI.</p>
+                        </div>
+                        <div class="h-16 flex items-center relative overflow-hidden">
+                            <svg class="w-full h-8 fill-none" viewBox="0 0 100 20">
+                                <path class="flow-line stroke-white/30" d="M0 10 Q 25 2, 50 10 T 100 10"
+                                    stroke-width="0.5"></path>
+                                <path class="flow-line stroke-white/10" d="M0 15 Q 25 5, 50 15 T 100 15"
+                                    stroke-width="0.5" style="animation-delay: 0.3s"></path>
+                            </svg>
+                            <div class="absolute right-0 w-1 h-1 bg-white rounded-full animate-ping"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="snap-section py-20 relative overflow-hidden border-y border-white/[0.05] flex items-center"
+            id="stats" data-section="2">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+                    <div class="space-y-2">
+                        <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
+                            <span class="counter" data-target="40" data-prefix="+" data-suffix="%">0%</span>
+                        </div>
+                        <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">Productivity</div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
+                            <span class="counter" data-target="150" data-suffix="h">0h</span>
+                        </div>
+                        <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">Saved Monthly</div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
+                            <span class="counter" data-target="6" data-suffix="m">0m</span>
+                        </div>
+                        <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">ROI Guarantee</div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
+                            <span class="counter" data-target="30" data-suffix="+">0+</span>
+                        </div>
+                        <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">Elite Clients</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expertise Section -->
+        <section class="snap-section py-32" id="expertise" data-section="3">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Target Profile -->
+                    <div class="glass-card rounded-[2.5rem] p-12 md:p-16 relative overflow-hidden tilt-card">
+                        <div
+                            class="absolute -top-20 -right-20 w-60 h-60 bg-white/[0.03] blur-[100px] rounded-full pointer-events-none">
+                        </div>
+                        <div class="absolute top-0 right-0 p-8 opacity-20">
+                            <span class="material-symbols-outlined !text-6xl">check_circle</span>
+                        </div>
+                        <h3
+                            class="reveal-text text-2xl font-display font-medium text-white mb-12 flex items-center gap-4">
+                            <span class="w-8 h-px bg-white/30"></span> Target Profile
+                        </h3>
+                        <div class="space-y-10">
+                            <div class="reveal-text flex items-start gap-6" style="transition-delay: 0.1s">
+                                <div class="text-2xl font-display font-light text-white text-glow">+10</div>
+                                <div>
+                                    <h4 class="text-white font-medium">Headcount Threshold</h4>
+                                    <p class="text-sm text-zinc-600 mt-1">Structured teams ready for scale-up
+                                        automation.</p>
+                                </div>
+                            </div>
+                            <div class="reveal-text flex items-start gap-6" style="transition-delay: 0.2s">
+                                <div class="text-2xl font-display font-light text-white text-glow">+1M$</div>
+                                <div>
+                                    <h4 class="text-white font-medium">Annual Revenue</h4>
+                                    <p class="text-sm text-zinc-600 mt-1">High-volume operations requiring precision
+                                        engines.</p>
+                                </div>
+                            </div>
+                            <div class="reveal-text flex items-start gap-6" style="transition-delay: 0.3s">
+                                <div class="text-2xl font-display font-light text-white text-glow">Long</div>
+                                <div>
+                                    <h4 class="text-white font-medium">Growth Vision</h4>
+                                    <p class="text-sm text-zinc-600 mt-1">Commitment to building a sustainable tech
+                                        infrastructure.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Out of Scope -->
+                    <div class="glass-card rounded-[2.5rem] p-12 md:p-16 opacity-50 relative overflow-hidden tilt-card">
+                        <div
+                            class="absolute -top-20 -left-20 w-40 h-40 bg-white/[0.02] blur-[80px] rounded-full pointer-events-none">
+                        </div>
+                        <div class="absolute top-0 right-0 p-8 opacity-20">
+                            <span class="material-symbols-outlined !text-6xl text-red-500/50">block</span>
+                        </div>
+                        <h3
+                            class="reveal-text text-2xl font-display font-medium text-white/60 mb-12 flex items-center gap-4">
+                            <span class="w-8 h-px bg-white/10"></span> Out of Scope
+                        </h3>
+                        <ul class="space-y-8">
+                            <li class="reveal-text flex items-center gap-4 text-zinc-600"
+                                style="transition-delay: 0.1s">
+                                <span class="material-symbols-outlined text-xs">close</span>
+                                Early-stage startups (pre-seed)
+                            </li>
+                            <li class="reveal-text flex items-center gap-4 text-zinc-600"
+                                style="transition-delay: 0.2s">
+                                <span class="material-symbols-outlined text-xs">close</span>
+                                One-off "quick-fix" requests
+                            </li>
+                            <li class="reveal-text flex items-center gap-4 text-zinc-600"
+                                style="transition-delay: 0.3s">
+                                <span class="material-symbols-outlined text-xs">close</span>
+                                Budgets under 10k€ deployment
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="snap-section py-32" id="about" data-section="4">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex flex-col lg:flex-row gap-20 items-center">
+                    <div class="flex-1 relative">
+                        <div class="absolute -inset-10 bg-white/[0.03] blur-[120px] rounded-full"></div>
+                        <div class="relative rounded-[2.5rem] overflow-hidden aspect-[4/5] shadow-2xl border border-white/10"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgcXS8RcEOnV_msgkE9VPL7DVT9KTDElBglgutaT592fnO4DVz_7tu_BMGbyr8GTWi7F2UFyEZruHhssKgmkC8xIiRnYzPeXDz011pADSN88fpQa_nwhLMpcYkF72jlUB7Z3BQKiuULPgVvtACSKU3ev8q_vAxmr_tOLBdiVIDzn4aSgoSrT6snV8HL2GYZj5yEyHbIVL5NMyTAVhCM78-64aBAX46Vfqi16qNoz_Pp-CsaaBdsYCqmAix-JZhZUfYC35cIRw-Dxc'); background-size: cover; background-position: top center;">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-transparent">
+                            </div>
+                            <div class="absolute bottom-10 left-10 glass-card-thin p-6 rounded-2xl">
+                                <span class="text-white font-display font-medium block">LUCA.</span>
+                                <span class="text-[10px] text-white/40 tracking-[0.3em] uppercase font-bold">Operational
+                                    Architect</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-10">
+                        <h2 class="reveal-text text-4xl md:text-5xl font-display font-light text-white leading-tight">
+                            Expertise serving elite performance.</h2>
+                        <p class="reveal-text text-lg text-zinc-500 leading-relaxed font-light"
+                            style="transition-delay: 0.1s">
+                            More than a consultant, I am the <span class="text-white font-medium">technical
+                                backbone</span> for leaders targeting excellence. My path in operations has taught me
+                            one absolute truth: clarity is the ultimate luxury.
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-6">
+                            <div class="reveal-text glass-card p-8 rounded-3xl border-l-2 border-white/20 tilt-card"
+                                style="transition-delay: 0.2s">
+                                <span class="material-symbols-outlined text-white/60 mb-4">psychology</span>
+                                <h4 class="text-white font-medium mb-1">Human-Centric AI</h4>
+                                <p class="text-xs text-zinc-600 leading-relaxed">AI must serve your talent, not replace
+                                    it.</p>
+                            </div>
+                            <div class="reveal-text glass-card p-8 rounded-3xl border-l-2 border-white/20 tilt-card"
+                                style="transition-delay: 0.3s">
+                                <span class="material-symbols-outlined text-white/60 mb-4">translate</span>
+                                <h4 class="text-white font-medium mb-1">Business First</h4>
+                                <p class="text-xs text-zinc-600 leading-relaxed">Zero jargon. Only tangible, measurable
+                                    outcomes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer CTA -->
+        <footer class="snap-section py-40 relative" data-section="5">
+            <div class="max-w-4xl mx-auto px-6 relative z-10 text-center space-y-16">
+                <div class="space-y-6">
+                    <h2 class="reveal-text text-5xl md:text-7xl font-display font-light text-white tracking-tight">Ready
+                        for the next <span class="italic font-normal opacity-80 text-glow-pulse">level?</span></h2>
+                    <p class="reveal-text text-lg text-zinc-600 font-light max-w-xl mx-auto"
+                        style="transition-delay: 0.1s">
+                        Secure a 45-minute discovery session. Walk away with a blueprint for your automation potential.
+                    </p>
+                </div>
+                <button
+                    class="reveal-text magnetic-btn px-16 py-6 bg-white text-black text-lg font-bold rounded-full shadow-[0_0_60px_rgba(255,255,255,0.15)]"
+                    style="transition-delay: 0.2s">
+                    <span class="magnetic-btn-inner">Book Discovery Session</span>
+                </button>
+                <div
+                    class="pt-32 flex flex-col md:flex-row justify-between items-center gap-10 border-t border-white/[0.05]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center">
+                            <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                        </div>
+                        <span class="text-[10px] tracking-[0.4em] font-bold text-white uppercase">Luca Optimization
+                            Boutique © 2026</span>
+                    </div>
+                    <div class="flex gap-8 text-[10px] tracking-[0.3em] font-bold uppercase text-zinc-600">
+                        <a class="hover:text-white transition-colors" href="#">Legal</a>
+                        <a class="hover:text-white transition-colors" href="#">LinkedIn</a>
+                        <a class="hover:text-white transition-colors" href="#">Privacy</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
 
     </div><!-- End snap-container -->
 
@@ -999,7 +1112,7 @@
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
                 const inner = btn.querySelector('.magnetic-btn-inner');
-                
+
                 btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
                 if (inner) inner.style.transform = `translate(${x * 0.05}px, ${y * 0.05}px)`;
             });
@@ -1126,11 +1239,11 @@
             navDots.forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
             });
-            
+
             // Update progress bar
             const progress = (index / (snapSections.length - 1)) * 100;
             navProgress.style.height = `${progress}%`;
-            
+
             currentSection = index;
         }
 
@@ -1139,15 +1252,15 @@
             if (index < 0 || index >= snapSections.length) return;
             if (index === currentSection) return;
             if (isScrolling) return;
-            
+
             isScrolling = true;
             lastScrollTime = Date.now();
             wheelAccumulator = 0;
-            
+
             const targetSection = snapSections[index];
             targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             updateNav(index);
-            
+
             // Reset scrolling flag after animation completes
             clearTimeout(scrollCooldown);
             scrollCooldown = setTimeout(() => {
@@ -1168,7 +1281,7 @@
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (isScrolling) return;
-            
+
             if (e.key === 'ArrowDown' || e.key === 'PageDown') {
                 e.preventDefault();
                 scrollToSection(currentSection + 1);
@@ -1184,51 +1297,8 @@
             }
         });
 
-        // Wheel navigation with debounce
-        let wheelTimeout = null;
-        
-        snapContainer.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            
-            if (isScrolling) return;
-            
-            // Accumulate wheel delta
-            wheelAccumulator += e.deltaY;
-            
-            // Clear previous timeout
-            clearTimeout(wheelTimeout);
-            
-            // Check if threshold reached
-            if (Math.abs(wheelAccumulator) >= wheelThreshold) {
-                const direction = wheelAccumulator > 0 ? 1 : -1;
-                wheelAccumulator = 0;
-                scrollToSection(currentSection + direction);
-            } else {
-                // Reset accumulator after inactivity
-                wheelTimeout = setTimeout(() => {
-                    wheelAccumulator = 0;
-                }, 100);
-            }
-        }, { passive: false });
-
-        // Touch navigation for mobile
-        let touchStartY = 0;
-        const touchThreshold = 50;
-
-        snapContainer.addEventListener('touchstart', (e) => {
-            touchStartY = e.changedTouches[0].screenY;
-        }, { passive: true });
-
-        snapContainer.addEventListener('touchend', (e) => {
-            if (isScrolling) return;
-            
-            const touchEndY = e.changedTouches[0].screenY;
-            const diff = touchStartY - touchEndY;
-            
-            if (Math.abs(diff) > touchThreshold) {
-                scrollToSection(currentSection + (diff > 0 ? 1 : -1));
-            }
-        }, { passive: true });
+        // Wheel navigation removed to allow native CSS scroll snapping
+        // Touch navigation removed to allow native CSS scroll snapping
 
         // Intersection Observer to sync nav with scroll position
         const sectionObserver = new IntersectionObserver((entries) => {
@@ -1241,9 +1311,9 @@
                     }
                 }
             });
-        }, { 
+        }, {
             root: snapContainer,
-            threshold: 0.5 
+            threshold: 0.5
         });
 
         snapSections.forEach(section => {
@@ -1251,7 +1321,7 @@
                 sectionObserver.observe(section);
             }
         });
-        
+
         // Safety: reset stuck state
         setInterval(() => {
             if (isScrolling && (Date.now() - lastScrollTime > scrollDuration + 300)) {
@@ -1259,7 +1329,7 @@
                 wheelAccumulator = 0;
             }
         }, 500);
-        
+
         // Track scroll activity
         snapContainer.addEventListener('scroll', () => {
             lastScrollTime = Date.now();
@@ -1273,8 +1343,8 @@
         // Animate sections on enter
         snapSections.forEach((section, index) => {
             gsap.fromTo(section.querySelectorAll('.reveal-text, .glass-card, h2, h3'),
-                { 
-                    opacity: 0, 
+                {
+                    opacity: 0,
                     y: 60,
                     filter: 'blur(10px)'
                 },
@@ -1316,7 +1386,7 @@
         // ===== MATRIX TYPEWRITER EFFECT =====
         function initMatrixTypewriter() {
             const matrixElements = document.querySelectorAll('.matrix-text');
-            
+
             matrixElements.forEach((element, index) => {
                 const words = element.dataset.words ? element.dataset.words.split(',') : ['DATA_STREAM'];
                 let currentWordIndex = 0;
@@ -1326,17 +1396,17 @@
                 const deleteSpeed = 35;
                 const pauseTime = 2500;
                 const glitchChars = '!@#$%&*_+-=|;:<>?0123456789ABCDEF';
-                
+
                 // Start with first word visible
                 element.textContent = '';
-                
+
                 function tick() {
                     const currentWord = words[currentWordIndex];
-                    
+
                     if (isDeleting) {
                         currentText = currentWord.substring(0, currentText.length - 1);
                         element.textContent = currentText;
-                        
+
                         if (currentText === '') {
                             isDeleting = false;
                             currentWordIndex = (currentWordIndex + 1) % words.length;
@@ -1347,13 +1417,13 @@
                     } else {
                         if (currentText.length < currentWord.length) {
                             const nextChar = currentWord[currentText.length];
-                            
+
                             // Glitch effect (15% chance)
                             if (Math.random() < 0.15) {
                                 const glitchChar = glitchChars[Math.floor(Math.random() * glitchChars.length)];
                                 element.textContent = currentText + glitchChar;
                                 element.classList.add('typing');
-                                
+
                                 setTimeout(() => {
                                     currentText += nextChar;
                                     element.textContent = currentText;
@@ -1362,11 +1432,11 @@
                                 }, 60);
                                 return;
                             }
-                            
+
                             currentText += nextChar;
                             element.textContent = currentText;
                             element.classList.add('typing');
-                            
+
                             setTimeout(() => {
                                 element.classList.remove('typing');
                                 tick();
@@ -1381,14 +1451,15 @@
                         }
                     }
                 }
-                
+
                 // Start each element with a staggered delay
                 setTimeout(tick, 500 + (index * 300) + Math.random() * 500);
             });
         }
-        
+
         // Initialize on DOM ready
         initMatrixTypewriter();
     </script>
 </body>
+
 </html>
