@@ -895,7 +895,7 @@
 
                 <h1 class="reveal-text text-white text-[7vw] md:text-6xl lg:text-7xl xl:text-8xl font-display font-light leading-[1.1] tracking-tight whitespace-nowrap"
                     style="transition-delay: 0.1s">
-                    Un clic vers la <span id="typewriter-word" class="italic font-normal text-glow-intense"></span><span id="typewriter-cursor" class="typewriter-cursor">|</span>
+                    Un clic vers <span id="typewriter-article">la </span><span id="typewriter-word" class="italic font-normal text-glow-intense"></span><span id="typewriter-cursor" class="typewriter-cursor">|</span>
                 </h1>
 
                 <p class="reveal-text text-sm md:text-lg text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light"
@@ -1961,7 +1961,21 @@
             let isPaused = false;
             
             const typewriterWord = document.getElementById('typewriter-word');
+            const typewriterArticle = document.getElementById('typewriter-article');
             const typewriterCursor = document.getElementById('typewriter-cursor');
+            
+            // French vowels for elision check
+            const vowels = ['a', 'e', 'i', 'o', 'u', 'é', 'è', 'ê', 'ë', 'à', 'â', 'î', 'ï', 'ô', 'ù', 'û', 'h'];
+            
+            function needsElision(word) {
+                return vowels.includes(word.charAt(0).toLowerCase());
+            }
+            
+            function updateArticle(word) {
+                if (typewriterArticle) {
+                    typewriterArticle.textContent = needsElision(word) ? "l'" : "la ";
+                }
+            }
             
             // Typing speeds (ms)
             const typeSpeed = 80;
@@ -1979,6 +1993,11 @@
                 }
                 
                 if (!isDeleting) {
+                    // Update article before typing first character
+                    if (charIndex === 0) {
+                        updateArticle(currentWord);
+                    }
+                    
                     // Typing
                     typewriterWord.textContent = currentWord.substring(0, charIndex + 1);
                     charIndex++;
@@ -2017,6 +2036,9 @@
                     setTimeout(typeWriter, deleteSpeed);
                 }
             }
+            
+            // Initialize with first word's article
+            updateArticle(words[0]);
             
             // Start the typewriter effect
             setTimeout(typeWriter, 800);
