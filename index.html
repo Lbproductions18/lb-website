@@ -601,7 +601,22 @@
             }
             
             /* Stats section - centered vertically */
-            #stats.snap-section-auto,
+            #stats {
+                min-height: 100vh !important;
+                height: 100vh;
+                padding: 2rem 1rem !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+                scroll-snap-align: center;
+                scroll-snap-stop: always;
+            }
+            
+            #stats > .max-w-7xl {
+                width: 100%;
+            }
+            
             .snap-section-auto {
                 min-height: 100vh;
                 padding: 2rem 1rem;
