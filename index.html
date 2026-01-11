@@ -389,6 +389,34 @@
             animation: glowPulse 4s ease-in-out infinite;
         }
 
+        /* Intense glow for typewriter word */
+        .text-glow-intense {
+            animation: glowIntense 2s ease-in-out infinite;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 40px rgba(255, 255, 255, 0.4),
+                0 0 80px rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes glowIntense {
+            0%, 100% {
+                text-shadow: 
+                    0 0 10px rgba(255, 255, 255, 0.8),
+                    0 0 20px rgba(255, 255, 255, 0.5),
+                    0 0 40px rgba(255, 255, 255, 0.3),
+                    0 0 60px rgba(255, 255, 255, 0.15);
+            }
+            50% {
+                text-shadow: 
+                    0 0 15px rgba(255, 255, 255, 1),
+                    0 0 30px rgba(255, 255, 255, 0.8),
+                    0 0 60px rgba(255, 255, 255, 0.5),
+                    0 0 100px rgba(255, 255, 255, 0.3),
+                    0 0 150px rgba(255, 255, 255, 0.15);
+            }
+        }
+
         /* Typewriter cursor */
         .typewriter-cursor {
             display: inline-block;
@@ -867,7 +895,7 @@
 
                 <h1 class="reveal-text text-white text-[7vw] md:text-6xl lg:text-7xl xl:text-8xl font-display font-light leading-[1.1] tracking-tight whitespace-nowrap"
                     style="transition-delay: 0.1s">
-                    Un clic vers la <span id="typewriter-word" class="italic font-normal opacity-90 text-glow-pulse"></span><span id="typewriter-cursor" class="typewriter-cursor">|</span>
+                    Un clic vers la <span id="typewriter-word" class="italic font-normal text-glow-intense"></span><span id="typewriter-cursor" class="typewriter-cursor">|</span>
                 </h1>
 
                 <p class="reveal-text text-sm md:text-lg text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light"
