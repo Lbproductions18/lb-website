@@ -815,46 +815,7 @@
         <section
             class="snap-section relative min-h-screen flex flex-col items-center justify-center pt-20 px-6 overflow-hidden"
             data-section="0">
-            <!-- Floating Nodes with Matrix Typewriter Effect -->
-            <div class="absolute inset-0 pointer-events-none overflow-hidden">
-                <div class="node-container absolute top-[25%] left-[5%] flex flex-col items-center">
-                    <div class="glowing-dot"></div>
-                    <div class="node-line h-32"></div>
-                    <span class="matrix-text text-[10px] tracking-[0.25em] text-white/50 mt-2 uppercase font-mono"
-                        data-words="Input_Stream,Data_Flux,Process_Node,Flow_Matrix,Sync_Handler,Query_Parse,Signal_Init,Buffer_Load"></span>
-                </div>
-                <div class="node-container absolute top-[15%] right-[5%] flex flex-col items-center">
-                    <div class="glowing-dot"></div>
-                    <div class="node-line h-48"></div>
-                    <span class="matrix-text text-[10px] tracking-[0.25em] text-white/50 mt-2 uppercase font-mono"
-                        data-words="Core_Logic,Neural_Mesh,Deep_Process,Auto_Compile,System_Forge,Logic_Weave,Task_Engine,Algo_Core"></span>
-                </div>
-                <div class="node-container absolute bottom-[22%] left-[12%] flex flex-col items-center">
-                    <div class="glowing-dot"></div>
-                    <div class="node-line h-24"></div>
-                    <span class="matrix-text text-[10px] tracking-[0.25em] text-white/50 mt-2 uppercase font-mono"
-                        data-words="Optimization,Perf_Boost,Flux_Tuner,Speed_Index,Load_Balance,Async_Pipe,Yield_Max,Cycle_Trim"></span>
-                </div>
-                <!-- Additional floating data nodes -->
-                <div class="node-container absolute top-[60%] right-[3%] flex flex-col items-center">
-                    <div class="glowing-dot"></div>
-                    <div class="node-line h-20"></div>
-                    <span class="matrix-text text-[9px] tracking-[0.2em] text-white/30 mt-2 uppercase font-mono"
-                        data-words="0x7F3A,Queue_Pop,Hash_Gen,Bit_Shift,Heap_Sort,Ref_Count,GC_Sweep,Ptr_Deref"></span>
-                </div>
-                <div class="node-container absolute top-[50%] left-[3%] flex flex-col items-center">
-                    <div class="glowing-dot"></div>
-                    <div class="node-line h-28"></div>
-                    <span class="matrix-text text-[9px] tracking-[0.2em] text-white/30 mt-2 uppercase font-mono"
-                        data-words="Proc_0x4E,Event_Bus,State_Mut,Ctx_Switch,Fork_Join,Mutex_Lock,Sem_Wait,Atomic_Op"></span>
-                </div>
-                <div class="node-container absolute bottom-[35%] right-[5%] flex flex-col items-center">
-                    <div class="glowing-dot"></div>
-                    <div class="node-line h-16"></div>
-                    <span class="matrix-text text-[9px] tracking-[0.2em] text-white/30 mt-2 uppercase font-mono"
-                        data-words="Node_42,Batch_Run,Cron_Tick,Job_Queue,Task_Pool,Work_Steal,Shard_Key,Bloom_Fil"></span>
-                </div>
-            </div>
+            <!-- Particle labels are now rendered on the canvas with typewriter effect -->
 
             <div class="max-w-5xl mx-auto text-center relative z-10 space-y-12">
                 <div
@@ -1254,20 +1215,77 @@
             'BATCH_RUN', 'TASK_INIT', 'FLOW_CTRL', 'MEM_ALLOC', 'HEAP_SORT',
             'ASYNC_IO', 'YIELD_MAX', 'LOAD_BAL', 'CACHE_HIT', 'REF_COUNT',
             'GC_SWEEP', 'MUTEX_LK', 'FORK_JOIN', 'PIPE_BUF', 'SHARD_KEY',
-            'NODE_42', 'CRON_JOB', 'API_CALL', 'DB_QUERY', 'NET_REQ'
+            'NODE_42', 'CRON_JOB', 'API_CALL', 'DB_QUERY', 'NET_REQ',
+            '0x7F3A9B', 'THREAD_0', 'STACK_POP', 'MALLOC_4K', 'TCP_SYN'
         ];
 
         class Particle {
             constructor(index) {
                 this.x = Math.random() * particleCanvas.width;
                 this.y = Math.random() * particleCanvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
                 this.radius = Math.random() * 1.5 + 0.5;
                 this.depth = Math.random(); // For parallax
+                
                 // Only particles with high depth (close to viewer) get labels
-                this.hasLabel = this.depth > 0.7 && Math.random() > 0.6;
-                this.label = dataWords[index % dataWords.length];
+                this.hasLabel = this.depth > 0.65 && Math.random() > 0.5;
+                this.words = [...dataWords].sort(() => Math.random() - 0.5); // Shuffle words
+                this.wordIndex = index % this.words.length;
+                this.currentWord = this.words[this.wordIndex];
+                this.displayText = '';
+                this.charIndex = 0;
+                this.isTyping = true;
+                this.isDeleting = false;
+                this.pauseTime = 0;
+                this.typeSpeed = 80 + Math.random() * 60; // Random speed per particle
+                this.lastUpdate = Date.now() - Math.random() * 3000; // Stagger start times
+            }
+
+            updateTypewriter() {
+                if (!this.hasLabel) return;
+                
+                const now = Date.now();
+                const elapsed = now - this.lastUpdate;
+                
+                // Pause between actions
+                if (this.pauseTime > 0) {
+                    if (elapsed > this.pauseTime) {
+                        this.pauseTime = 0;
+                        this.lastUpdate = now;
+                    }
+                    return;
+                }
+                
+                if (this.isTyping) {
+                    if (elapsed > this.typeSpeed) {
+                        if (this.charIndex < this.currentWord.length) {
+                            this.displayText = this.currentWord.substring(0, this.charIndex + 1);
+                            this.charIndex++;
+                        } else {
+                            // Done typing, pause then delete
+                            this.isTyping = false;
+                            this.pauseTime = 1500 + Math.random() * 1000;
+                            this.isDeleting = true;
+                        }
+                        this.lastUpdate = now;
+                    }
+                } else if (this.isDeleting) {
+                    if (elapsed > this.typeSpeed * 0.5) {
+                        if (this.charIndex > 0) {
+                            this.charIndex--;
+                            this.displayText = this.currentWord.substring(0, this.charIndex);
+                        } else {
+                            // Done deleting, pick new word
+                            this.isDeleting = false;
+                            this.isTyping = true;
+                            this.wordIndex = (this.wordIndex + 1) % this.words.length;
+                            this.currentWord = this.words[this.wordIndex];
+                            this.pauseTime = 300 + Math.random() * 500;
+                        }
+                        this.lastUpdate = now;
+                    }
+                }
             }
 
             update(scrollY) {
@@ -1279,6 +1297,9 @@
 
                 if (this.x < 0 || this.x > particleCanvas.width) this.vx *= -1;
                 if (this.y < 0 || this.y > particleCanvas.height) this.vy *= -1;
+
+                // Update typewriter effect
+                this.updateTypewriter();
 
                 return parallaxOffset;
             }
@@ -1292,14 +1313,25 @@
                 particleCtx.fillStyle = `rgba(255, 255, 255, ${0.3 + this.depth * 0.4})`;
                 particleCtx.fill();
                 
-                // Draw label if particle has one
-                if (this.hasLabel) {
+                // Draw label with typewriter effect
+                if (this.hasLabel && this.displayText) {
                     // Text opacity based on depth (closer = more visible)
-                    const textOpacity = (this.depth - 0.7) * 2; // 0 to 0.6
+                    const textOpacity = Math.min((this.depth - 0.65) * 2.5, 0.6);
                     particleCtx.font = '9px monospace';
-                    particleCtx.fillStyle = `rgba(255, 255, 255, ${textOpacity * 0.5})`;
                     particleCtx.textAlign = 'center';
-                    particleCtx.fillText(this.label, this.x, y + 12);
+                    
+                    // Draw text
+                    particleCtx.fillStyle = `rgba(255, 255, 255, ${textOpacity})`;
+                    particleCtx.fillText(this.displayText, this.x, y + 14);
+                    
+                    // Draw cursor
+                    if (this.isTyping || this.isDeleting) {
+                        const textWidth = particleCtx.measureText(this.displayText).width;
+                        const cursorX = this.x + textWidth / 2 + 2;
+                        const cursorOpacity = Math.sin(Date.now() / 200) > 0 ? textOpacity : 0;
+                        particleCtx.fillStyle = `rgba(255, 255, 255, ${cursorOpacity})`;
+                        particleCtx.fillText('▌', cursorX, y + 14);
+                    }
                 }
             }
         }
@@ -1704,82 +1736,7 @@
         });
         document.querySelector('.font-display').parentElement.style.cursor = 'pointer';
 
-        // ===== MATRIX TYPEWRITER EFFECT =====
-        function initMatrixTypewriter() {
-            const matrixElements = document.querySelectorAll('.matrix-text');
-
-            matrixElements.forEach((element, index) => {
-                const words = element.dataset.words ? element.dataset.words.split(',') : ['DATA_STREAM'];
-                let currentWordIndex = 0;
-                let currentText = '';
-                let isDeleting = false;
-                const typeSpeed = 70;
-                const deleteSpeed = 35;
-                const pauseTime = 2500;
-                const glitchChars = '!@#$%&*_+-=|;:<>?0123456789ABCDEF';
-
-                // Start with first word visible
-                element.textContent = '';
-
-                function tick() {
-                    const currentWord = words[currentWordIndex];
-
-                    if (isDeleting) {
-                        currentText = currentWord.substring(0, currentText.length - 1);
-                        element.textContent = currentText;
-
-                        if (currentText === '') {
-                            isDeleting = false;
-                            currentWordIndex = (currentWordIndex + 1) % words.length;
-                            setTimeout(tick, 400);
-                            return;
-                        }
-                        setTimeout(tick, deleteSpeed + Math.random() * 20);
-                    } else {
-                        if (currentText.length < currentWord.length) {
-                            const nextChar = currentWord[currentText.length];
-
-                            // Glitch effect (15% chance)
-                            if (Math.random() < 0.15) {
-                                const glitchChar = glitchChars[Math.floor(Math.random() * glitchChars.length)];
-                                element.textContent = currentText + glitchChar;
-                                element.classList.add('typing');
-
-                                setTimeout(() => {
-                                    currentText += nextChar;
-                                    element.textContent = currentText;
-                                    element.classList.remove('typing');
-                                    setTimeout(tick, typeSpeed + Math.random() * 40);
-                                }, 60);
-                                return;
-                            }
-
-                            currentText += nextChar;
-                            element.textContent = currentText;
-                            element.classList.add('typing');
-
-                            setTimeout(() => {
-                                element.classList.remove('typing');
-                                tick();
-                            }, typeSpeed + Math.random() * 40);
-                        } else {
-                            // Word complete, pause then delete
-                            element.classList.remove('typing');
-                            setTimeout(() => {
-                                isDeleting = true;
-                                tick();
-                            }, pauseTime + Math.random() * 1500);
-                        }
-                    }
-                }
-
-                // Start each element with a staggered delay
-                setTimeout(tick, 500 + (index * 300) + Math.random() * 500);
-            });
-        }
-
-        // Initialize on DOM ready
-        initMatrixTypewriter();
+        // Matrix typewriter effect is now integrated into the particle system
 
         // ===== PROTOCOL CARDS BLUR EFFECT (MOBILE) =====
         (function() {
