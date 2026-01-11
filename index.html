@@ -763,9 +763,10 @@
                 gap: 1.5rem;
             }
             
-            /* About image - much smaller on mobile */
+            /* About image - wider on mobile for horizontal format */
             #about .flex-shrink-0 {
-                max-width: 140px !important;
+                max-width: 100% !important;
+                width: 100%;
             }
             
             /* About cards - stack vertically on mobile */
@@ -950,16 +951,28 @@
             <div class="max-w-7xl mx-auto px-6 h-full flex items-center">
                 <div class="flex flex-col lg:flex-row gap-6 lg:gap-16 items-center w-full py-8">
                     <!-- Image visible on all screens -->
-                    <div class="flex-shrink-0 relative w-full max-w-[200px] lg:max-w-[350px] mx-auto lg:mx-0">
+                    <div class="flex-shrink-0 relative w-full max-w-[280px] lg:max-w-[350px] mx-auto lg:mx-0">
                         <div class="absolute -inset-10 bg-white/[0.03] blur-[120px] rounded-full"></div>
-                        <div class="relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-2xl"
+                        <!-- Desktop: vertical image -->
+                        <div class="hidden lg:block relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-2xl"
                             style="background-image: url('https://i.goopics.net/sq43d6.jpg'); background-size: cover; background-position: top center; border: none;">
                             <div
                                 class="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-transparent">
                             </div>
-                            <div class="absolute bottom-4 left-4 lg:bottom-8 lg:left-8 glass-card-thin p-3 lg:p-5 rounded-xl">
-                                <span class="text-white font-display font-medium block text-xs lg:text-base">LUCA</span>
-                                <span class="text-[7px] lg:text-[10px] text-white/40 tracking-[0.2em] uppercase font-bold">Consultant en IA</span>
+                            <div class="absolute bottom-8 left-8 glass-card-thin p-5 rounded-xl">
+                                <span class="text-white font-display font-medium block text-base">LUCA</span>
+                                <span class="text-[10px] text-white/40 tracking-[0.2em] uppercase font-bold">Consultant en IA</span>
+                            </div>
+                        </div>
+                        <!-- Mobile: horizontal image -->
+                        <div class="lg:hidden relative rounded-[1.5rem] overflow-hidden aspect-[16/10] shadow-2xl"
+                            style="background-image: url('https://i.goopics.net/ft1uxw.jpg'); background-size: cover; background-position: center; border: none;">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-transparent">
+                            </div>
+                            <div class="absolute bottom-3 left-3 glass-card-thin p-2 rounded-lg">
+                                <span class="text-white font-display font-medium block text-xs">LUCA</span>
+                                <span class="text-[7px] text-white/40 tracking-[0.2em] uppercase font-bold">Consultant en IA</span>
                             </div>
                         </div>
                     </div>
