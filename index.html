@@ -1146,13 +1146,13 @@
         resizeMeshCanvas();
         window.addEventListener('resize', resizeMeshCanvas);
 
-        // Gradient orbs with organic movement - Black & White Aurora
+        // Aurora Mists - Mint pale (#99FFCC) and Glacier blue (#CCEEFF) with very low opacity
         const orbs = [
-            { x: 0.15, y: 0.1, vx: 0.0002, vy: 0.00015, radius: 0.6, color: 'hsla(220, 10%, 18%, 0.9)' },
-            { x: 0.85, y: 0.2, vx: -0.00015, vy: 0.0002, radius: 0.5, color: 'hsla(210, 8%, 15%, 0.8)' },
-            { x: 0.5, y: 0.6, vx: 0.00015, vy: -0.00015, radius: 0.55, color: 'hsla(0, 0%, 20%, 0.6)' },
-            { x: 0.2, y: 0.85, vx: 0.0002, vy: 0.0001, radius: 0.4, color: 'hsla(220, 5%, 12%, 0.7)' },
-            { x: 0.7, y: 0.7, vx: -0.0001, vy: -0.0002, radius: 0.35, color: 'hsla(0, 0%, 25%, 0.4)' },
+            { x: 0.15, y: 0.1, vx: 0.0001, vy: 0.00008, radius: 0.7, color: 'rgba(153, 255, 204, 0.08)' }, // Mint
+            { x: 0.85, y: 0.2, vx: -0.00008, vy: 0.0001, radius: 0.6, color: 'rgba(204, 238, 255, 0.08)' }, // Glacier blue
+            { x: 0.5, y: 0.6, vx: 0.00008, vy: -0.00008, radius: 0.65, color: 'rgba(153, 255, 204, 0.06)' }, // Mint
+            { x: 0.2, y: 0.85, vx: 0.0001, vy: 0.00006, radius: 0.5, color: 'rgba(204, 238, 255, 0.07)' }, // Glacier blue
+            { x: 0.7, y: 0.7, vx: -0.00006, vy: -0.0001, radius: 0.45, color: 'rgba(180, 255, 230, 0.05)' }, // Mix
         ];
 
         function drawMeshGradient() {
@@ -1195,12 +1195,17 @@
         }
         drawMeshGradient();
 
-        // ===== PARTICLE NETWORK =====
+        // ===== PARTICLE NETWORK (Floating Node Network + Star-Dust + Scanning) =====
         const particleCanvas = document.getElementById('particle-canvas');
         const particleCtx = particleCanvas.getContext('2d');
-        const particles = [];
-        const particleCount = 60;
-        const connectionDistance = 150;
+        
+        // Track mouse for magnetic effect
+        let particleMouseX = window.innerWidth / 2;
+        let particleMouseY = window.innerHeight / 2;
+        document.addEventListener('mousemove', (e) => {
+            particleMouseX = e.clientX;
+            particleMouseY = e.clientY;
+        });
 
         function resizeParticleCanvas() {
             particleCanvas.width = window.innerWidth;
@@ -1209,171 +1214,224 @@
         resizeParticleCanvas();
         window.addEventListener('resize', resizeParticleCanvas);
 
-        // Data words for particle labels
+        // ===== 1. FLOATING NODE NETWORK (Big bubbles 4-8px with lines) =====
+        const nodes = [];
+        const nodeCount = 25;
+        const connectionDistance = 200;
+
+        // Data words for node labels
         const dataWords = [
-            'SYNC_NODE', 'DATA_FLUX', 'PROCESS_ID', 'HASH_0x4F', 'QUEUE_POP',
-            'BATCH_RUN', 'TASK_INIT', 'FLOW_CTRL', 'MEM_ALLOC', 'HEAP_SORT',
-            'ASYNC_IO', 'YIELD_MAX', 'LOAD_BAL', 'CACHE_HIT', 'REF_COUNT',
-            'GC_SWEEP', 'MUTEX_LK', 'FORK_JOIN', 'PIPE_BUF', 'SHARD_KEY',
-            'NODE_42', 'CRON_JOB', 'API_CALL', 'DB_QUERY', 'NET_REQ',
-            '0x7F3A9B', 'THREAD_0', 'STACK_POP', 'MALLOC_4K', 'TCP_SYN'
+            'SYNC', 'DATA', 'FLOW', 'NODE', 'HASH',
+            'TASK', 'LOAD', 'PIPE', 'CORE', 'FLUX',
+            'SCAN', 'INIT', 'PROC', 'EXEC', 'LINK'
         ];
 
-        class Particle {
+        class Node {
             constructor(index) {
                 this.x = Math.random() * particleCanvas.width;
                 this.y = Math.random() * particleCanvas.height;
-                this.vx = (Math.random() - 0.5) * 0.4;
-                this.vy = (Math.random() - 0.5) * 0.4;
-                this.radius = Math.random() * 1.5 + 0.5;
-                this.depth = Math.random(); // For parallax
-                
-                // More particles get labels (about 25%)
-                this.hasLabel = this.depth > 0.5 && Math.random() > 0.7;
-                
-                // Typewriter state
-                this.words = [...dataWords].sort(() => Math.random() - 0.5);
-                this.wordIndex = Math.floor(Math.random() * this.words.length);
-                this.currentWord = this.words[this.wordIndex];
-                this.displayText = '';
-                this.charIndex = 0;
-                this.isTyping = true;
-                this.isDeleting = false;
-                this.pauseTime = 0;
-                
-                // Random speeds for desync effect
-                this.typeSpeed = 80 + Math.random() * 120;
-                this.deleteSpeed = 40 + Math.random() * 60;
-                this.pauseDuration = 2000 + Math.random() * 3000;
-                this.lastUpdate = Date.now() - Math.random() * 5000;
-                
-                // Some start mid-word
-                if (Math.random() > 0.5) {
-                    this.charIndex = Math.floor(Math.random() * this.currentWord.length);
-                    this.displayText = this.currentWord.substring(0, this.charIndex);
-                }
-            }
-
-            updateTypewriter() {
-                if (!this.hasLabel) return;
-                
-                const now = Date.now();
-                const elapsed = now - this.lastUpdate;
-                
-                if (this.pauseTime > 0) {
-                    if (elapsed > this.pauseTime) {
-                        this.pauseTime = 0;
-                        this.lastUpdate = now;
-                    }
-                    return;
-                }
-                
-                if (this.isTyping) {
-                    if (elapsed > this.typeSpeed) {
-                        if (this.charIndex < this.currentWord.length) {
-                            this.displayText = this.currentWord.substring(0, this.charIndex + 1);
-                            this.charIndex++;
-                        } else {
-                            this.isTyping = false;
-                            this.pauseTime = this.pauseDuration;
-                            this.isDeleting = true;
-                        }
-                        this.lastUpdate = now;
-                    }
-                } else if (this.isDeleting) {
-                    if (elapsed > this.deleteSpeed) {
-                        if (this.charIndex > 0) {
-                            this.charIndex--;
-                            this.displayText = this.currentWord.substring(0, this.charIndex);
-                        } else {
-                            this.isDeleting = false;
-                            this.isTyping = true;
-                            this.wordIndex = (this.wordIndex + 1) % this.words.length;
-                            this.currentWord = this.words[this.wordIndex];
-                            this.pauseTime = 300 + Math.random() * 500;
-                        }
-                        this.lastUpdate = now;
-                    }
-                }
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.radius = 4 + Math.random() * 4; // 4-8px
+                this.depth = Math.random();
+                this.label = dataWords[index % dataWords.length];
+                this.hasLabel = Math.random() > 0.6;
+                this.floatOffset = Math.random() * Math.PI * 2;
             }
 
             update(scrollY) {
+                // Slow floating movement
                 this.x += this.vx;
                 this.y += this.vy;
+                
+                // Add gentle float effect
+                this.x += Math.sin(Date.now() * 0.0005 + this.floatOffset) * 0.2;
+                this.y += Math.cos(Date.now() * 0.0004 + this.floatOffset) * 0.2;
 
-                // Parallax effect based on depth
+                // Magnetic attraction to mouse (when close)
+                const dx = particleMouseX - this.x;
+                const dy = particleMouseY - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 150) {
+                    const force = (150 - dist) / 150 * 0.02;
+                    this.x += dx * force;
+                    this.y += dy * force;
+                }
+
+                // Parallax
                 const parallaxOffset = scrollY * this.depth * 0.1;
 
-                if (this.x < 0 || this.x > particleCanvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > particleCanvas.height) this.vy *= -1;
-
-                this.updateTypewriter();
+                // Bounce at edges with padding
+                if (this.x < 50) this.vx = Math.abs(this.vx);
+                if (this.x > particleCanvas.width - 50) this.vx = -Math.abs(this.vx);
+                if (this.y < 50) this.vy = Math.abs(this.vy);
+                if (this.y > particleCanvas.height - 50) this.vy = -Math.abs(this.vy);
 
                 return parallaxOffset;
             }
 
-            draw(parallaxOffset) {
+            draw(parallaxOffset, isNearMouse) {
                 const y = this.y - parallaxOffset;
+                const glow = isNearMouse ? 0.8 : 0.4;
                 
-                // Draw particle dot
+                // Draw bubble with subtle glow
                 particleCtx.beginPath();
                 particleCtx.arc(this.x, y, this.radius, 0, Math.PI * 2);
-                particleCtx.fillStyle = `rgba(255, 255, 255, ${0.3 + this.depth * 0.4})`;
+                particleCtx.fillStyle = `rgba(255, 255, 255, ${glow})`;
                 particleCtx.fill();
                 
-                // Draw label with typewriter effect
-                if (this.hasLabel && this.displayText) {
-                    // Text opacity based on depth (closer = more visible)
-                    const textOpacity = Math.max(0, (this.depth - 0.5) * 1.2);
-                    particleCtx.font = '9px monospace';
+                // Outer glow ring
+                particleCtx.beginPath();
+                particleCtx.arc(this.x, y, this.radius + 2, 0, Math.PI * 2);
+                particleCtx.strokeStyle = `rgba(255, 255, 255, ${glow * 0.3})`;
+                particleCtx.lineWidth = 1;
+                particleCtx.stroke();
+                
+                // Label below node
+                if (this.hasLabel) {
+                    particleCtx.font = '8px monospace';
                     particleCtx.textAlign = 'center';
-                    particleCtx.fillStyle = `rgba(255, 255, 255, ${textOpacity * 0.4})`;
-                    particleCtx.fillText(this.displayText, this.x, y + 14);
-                    
-                    // Blinking cursor when typing
-                    if (this.isTyping && Math.sin(Date.now() / 300) > 0) {
-                        const textWidth = particleCtx.measureText(this.displayText).width;
-                        particleCtx.fillText('_', this.x + textWidth/2 + 3, y + 14);
-                    }
+                    particleCtx.fillStyle = `rgba(255, 255, 255, ${glow * 0.5})`;
+                    particleCtx.fillText(this.label, this.x, y + this.radius + 12);
                 }
             }
         }
 
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle(i));
+        for (let i = 0; i < nodeCount; i++) {
+            nodes.push(new Node(i));
         }
 
+        // ===== 2. STAR-DUST (Tiny particles 1-2px, some twinkle) =====
+        const starDust = [];
+        const starCount = 80;
+
+        class StarParticle {
+            constructor() {
+                this.x = Math.random() * particleCanvas.width;
+                this.y = Math.random() * particleCanvas.height;
+                this.radius = 0.5 + Math.random() * 1.5; // 1-2px
+                this.depth = Math.random();
+                this.twinkle = Math.random() > 0.85; // 15% twinkle
+                this.twinkleSpeed = 0.002 + Math.random() * 0.003;
+                this.twinkleOffset = Math.random() * Math.PI * 2;
+                // Different directions for 3D parallax effect
+                this.vy = (Math.random() - 0.5) * 0.15; // Some up, some down
+            }
+
+            update(scrollY) {
+                this.y += this.vy;
+                if (this.y < 0) this.y = particleCanvas.height;
+                if (this.y > particleCanvas.height) this.y = 0;
+                return scrollY * this.depth * 0.15;
+            }
+
+            draw(parallaxOffset) {
+                const y = this.y - parallaxOffset;
+                let opacity = 0.15 + this.depth * 0.2;
+                
+                // Twinkle effect
+                if (this.twinkle) {
+                    opacity *= 0.5 + Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset) * 0.5;
+                }
+                
+                particleCtx.beginPath();
+                particleCtx.arc(this.x, y, this.radius, 0, Math.PI * 2);
+                particleCtx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+                particleCtx.fill();
+            }
+        }
+
+        for (let i = 0; i < starCount; i++) {
+            starDust.push(new StarParticle());
+        }
+
+        // ===== 3. SCANNING LINE =====
+        let scanLineY = -100;
+        let scanLineActive = false;
+        let lastScanTime = Date.now();
+        const scanInterval = 8000; // Every 8 seconds
+
+        // ===== MAIN DRAW LOOP =====
         function drawParticles() {
             particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
             const container = document.getElementById('snap-container');
             const scrollY = container ? container.scrollTop : window.scrollY;
 
-            // Draw connections
-            for (let i = 0; i < particles.length; i++) {
-                const parallaxI = particles[i].update(scrollY);
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
+            // Draw star-dust first (background)
+            starDust.forEach(star => {
+                const parallax = star.update(scrollY);
+                star.draw(parallax);
+            });
+
+            // Draw node connections (some dashed for data flow effect)
+            for (let i = 0; i < nodes.length; i++) {
+                const parallaxI = nodes[i].update(scrollY);
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = (nodes[i].y - parallaxI) - (nodes[j].y - nodes[j].depth * scrollY * 0.1);
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < connectionDistance) {
-                        const opacity = (1 - distance / connectionDistance) * 0.15;
+                        const opacity = (1 - distance / connectionDistance) * 0.25;
+                        
+                        // Check if mouse is near this connection
+                        const midX = (nodes[i].x + nodes[j].x) / 2;
+                        const midY = (nodes[i].y + nodes[j].y) / 2;
+                        const mouseDist = Math.sqrt((particleMouseX - midX) ** 2 + (particleMouseY - midY) ** 2);
+                        const brightness = mouseDist < 100 ? opacity * 2 : opacity;
+                        
                         particleCtx.beginPath();
-                        particleCtx.moveTo(particles[i].x, particles[i].y - parallaxI);
-                        const parallaxJ = particles[j].depth * scrollY * 0.1;
-                        particleCtx.lineTo(particles[j].x, particles[j].y - parallaxJ);
-                        particleCtx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
-                        particleCtx.lineWidth = 0.5;
+                        particleCtx.moveTo(nodes[i].x, nodes[i].y - parallaxI);
+                        const parallaxJ = nodes[j].depth * scrollY * 0.1;
+                        particleCtx.lineTo(nodes[j].x, nodes[j].y - parallaxJ);
+                        
+                        // Some lines are dashed (30% chance)
+                        if ((i + j) % 3 === 0) {
+                            particleCtx.setLineDash([4, 4]);
+                        } else {
+                            particleCtx.setLineDash([]);
+                        }
+                        
+                        particleCtx.strokeStyle = `rgba(255, 255, 255, ${brightness})`;
+                        particleCtx.lineWidth = 1;
                         particleCtx.stroke();
+                        particleCtx.setLineDash([]);
                     }
                 }
             }
 
-            // Draw particles
-            particles.forEach(p => {
-                const parallax = p.depth * scrollY * 0.1;
-                p.draw(parallax);
+            // Draw nodes
+            nodes.forEach(node => {
+                const parallax = node.depth * scrollY * 0.1;
+                const mouseDist = Math.sqrt((particleMouseX - node.x) ** 2 + (particleMouseY - node.y) ** 2);
+                node.draw(parallax, mouseDist < 100);
             });
+
+            // Scanning line effect
+            const now = Date.now();
+            if (now - lastScanTime > scanInterval) {
+                scanLineActive = true;
+                scanLineY = -20;
+                lastScanTime = now;
+            }
+            
+            if (scanLineActive) {
+                scanLineY += 3;
+                if (scanLineY > particleCanvas.height + 20) {
+                    scanLineActive = false;
+                }
+                
+                // Draw scan line
+                const gradient = particleCtx.createLinearGradient(0, scanLineY - 10, 0, scanLineY + 10);
+                gradient.addColorStop(0, 'rgba(153, 255, 204, 0)');
+                gradient.addColorStop(0.5, 'rgba(153, 255, 204, 0.15)');
+                gradient.addColorStop(1, 'rgba(153, 255, 204, 0)');
+                
+                particleCtx.fillStyle = gradient;
+                particleCtx.fillRect(0, scanLineY - 10, particleCanvas.width, 20);
+            }
 
             requestAnimationFrame(drawParticles);
         }
