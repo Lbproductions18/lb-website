@@ -72,18 +72,13 @@
         }
 
         @media (max-width: 768px) {
+            /* Mobile: use proximity snap for smoother experience */
             .snap-container {
-                scroll-snap-type: y mandatory;
-                /* Revert to mandatory to prevent skipping */
+                scroll-snap-type: y proximity;
             }
-
-            /* Add internal snap points for cards in tall sections */
-            .glass-card {
-                scroll-snap-align: center;
-                scroll-margin-top: 120px;
-                scroll-snap-stop: always;
-                /* Force stop at each card */
-                /* Ensure card isn't hidden by header */
+            
+            .snap-section {
+                scroll-snap-align: start;
             }
         }
 
@@ -512,73 +507,104 @@
             .glass-card::after {
                 display: none;
             }
-            
-            /* Mobile: Disable snap scrolling for better UX */
-            body.snap-enabled {
-                overflow-y: auto;
-                height: auto;
-            }
-            
-            .snap-container {
-                height: auto;
-                overflow-y: visible;
-                scroll-snap-type: none;
-            }
-            
+        }
+
+        /* ===== MOBILE RESPONSIVE FIXES ===== */
+        @media (max-width: 1024px) {
+            /* Sections - remove extra padding */
             .snap-section {
-                min-height: auto !important;
-                padding-top: 3rem;
-                padding-bottom: 3rem;
-                scroll-snap-align: none;
-            }
-            
-            .snap-section-auto {
-                padding-top: 2rem;
-                padding-bottom: 2rem;
-            }
-            
-            /* Hero stays full height on mobile */
-            section[data-section="0"] {
-                min-height: 100vh !important;
-                min-height: 100dvh !important;
-                padding-top: 6rem;
-            }
-            
-            /* Cards take full width and center */
-            .grid.grid-cols-1.lg\\:grid-cols-2 {
-                gap: 1.5rem;
-            }
-            
-            .glass-card {
-                width: 100%;
-                max-width: 100%;
-            }
-            
-            /* Reduce padding on mobile */
-            .px-6 {
                 padding-left: 1rem;
                 padding-right: 1rem;
             }
             
-            .p-12 {
-                padding: 2rem;
+            /* Protocol cards - stack properly */
+            .snap-section .grid.md\\:grid-cols-3 {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Hero section */
+            .snap-section h1 {
+                font-size: 2.75rem !important;
+                line-height: 1.1;
             }
             
-            .p-10 {
-                padding: 1.5rem;
+            /* Remove min-height constraint on mobile for better content fit */
+            .snap-section {
+                min-height: auto;
+                padding-top: 100px;
+                padding-bottom: 60px;
             }
             
-            /* Smaller text on mobile */
-            .text-6xl {
-                font-size: 2.5rem;
+            /* First section (hero) keeps full height */
+            .snap-section:first-of-type {
+                min-height: 100vh;
+                padding-top: 80px;
             }
             
-            .text-5xl {
+            /* Stats section - center content */
+            .snap-section-auto {
+                min-height: auto;
+                padding: 3rem 1rem;
+            }
+            
+            /* Cards - full width and centered */
+            .glass-card {
+                width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            /* Grid layouts - single column */
+            .grid.lg\\:grid-cols-2 {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            /* Target Profile / Out of Scope cards */
+            .grid.lg\\:grid-cols-2 > div {
+                width: 100%;
+                padding: 2rem !important;
+            }
+            
+            /* Stats grid - 2 columns on mobile */
+            .grid.md\\:grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            /* Stats numbers smaller */
+            .grid.md\\:grid-cols-4 .text-4xl {
                 font-size: 2rem;
             }
             
-            .text-4xl {
-                font-size: 1.75rem;
+            /* Protocol cards */
+            .grid.md\\:grid-cols-3 {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            /* About section - stack image and text */
+            .flex.lg\\:flex-row {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            /* About image - smaller on mobile */
+            .flex.lg\\:flex-row .flex-1:first-child {
+                max-width: 280px;
+                margin: 0 auto;
+            }
+            
+            /* Footer - less padding */
+            footer.snap-section {
+                padding-top: 60px;
+                padding-bottom: 40px;
+            }
+            
+            footer h2 {
+                font-size: 2rem !important;
             }
             
             /* Hide floating nodes on mobile */
@@ -586,70 +612,52 @@
                 display: none;
             }
             
-            /* Section nav smaller on mobile */
+            /* Navigation dots - smaller gap */
             .section-nav {
                 right: 0.5rem;
             }
             
-            /* Footer adjustments */
-            footer.snap-section {
-                padding-top: 4rem;
-                padding-bottom: 2rem;
+            /* Buttons - full width */
+            .magnetic-btn {
+                width: 100%;
+                max-width: 300px;
             }
             
-            .pt-32 {
-                padding-top: 2rem;
-            }
-            
-            .py-32 {
-                padding-top: 3rem;
-                padding-bottom: 3rem;
-            }
-            
-            .py-40 {
-                padding-top: 3rem;
-                padding-bottom: 2rem;
-            }
-            
-            .mb-24 {
-                margin-bottom: 2rem;
-            }
-            
-            .mb-12 {
-                margin-bottom: 1.5rem;
-            }
-            
-            .space-y-10 > * + * {
-                margin-top: 1.5rem;
-            }
-            
-            .gap-20 {
-                gap: 2rem;
-            }
-            
-            .gap-12 {
-                gap: 1.5rem;
-            }
-        }
-        
-        /* Extra small screens */
-        @media (max-width: 400px) {
-            .text-6xl, .text-5xl {
+            /* Section titles */
+            .text-4xl {
                 font-size: 1.75rem;
             }
             
-            .text-4xl {
+            .text-5xl {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Extra small screens */
+            .snap-section h1 {
+                font-size: 2.25rem !important;
+            }
+            
+            .glass-card {
+                padding: 1.5rem !important;
+                border-radius: 1.5rem;
+            }
+            
+            /* Stats - smaller */
+            .grid.md\\:grid-cols-4 .text-4xl,
+            .grid.md\\:grid-cols-4 .text-5xl {
                 font-size: 1.5rem;
             }
             
-            .px-16 {
-                padding-left: 2rem;
-                padding-right: 2rem;
+            .grid.md\\:grid-cols-4 {
+                gap: 1rem;
             }
             
-            .py-6 {
-                padding-top: 1rem;
-                padding-bottom: 1rem;
+            /* Footer button */
+            footer .magnetic-btn {
+                padding: 1rem 2rem;
+                font-size: 0.875rem;
             }
         }
     </style>
@@ -795,9 +803,9 @@
                     <div class="reveal-text w-24 h-px bg-white/20 mx-auto" style="transition-delay: 0.1s"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12">
-                <!-- Card 1 -->
-                <div class="glass-card p-6 md:p-10 rounded-2xl md:rounded-3xl space-y-6 md:space-y-8 relative group tilt-card">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <!-- Card 1 -->
+                    <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
                         <div class="flex justify-between items-center">
                             <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 01</span>
                             <span
@@ -818,8 +826,8 @@
                         </div>
                     </div>
 
-                <!-- Card 2 -->
-                <div class="glass-card p-6 md:p-10 rounded-2xl md:rounded-3xl space-y-6 md:space-y-8 relative group tilt-card">
+                    <!-- Card 2 -->
+                    <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
                         <div class="flex justify-between items-center">
                             <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 02</span>
                             <span
@@ -843,8 +851,8 @@
                         </div>
                     </div>
 
-                <!-- Card 3 -->
-                <div class="glass-card p-6 md:p-10 rounded-2xl md:rounded-3xl space-y-6 md:space-y-8 relative group tilt-card">
+                    <!-- Card 3 -->
+                    <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
                         <div class="flex justify-between items-center">
                             <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 03</span>
                             <span
@@ -905,9 +913,9 @@
         <!-- Expertise Section -->
         <section class="snap-section py-12 md:py-32" id="expertise" data-section="3">
             <div class="max-w-7xl mx-auto px-6">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12">
-                <!-- Target Profile -->
-                <div class="glass-card rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-12 lg:p-16 relative overflow-hidden tilt-card">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Target Profile -->
+                    <div class="glass-card rounded-[2.5rem] p-12 md:p-16 relative overflow-hidden tilt-card">
                         <div
                             class="absolute -top-20 -right-20 w-60 h-60 bg-white/[0.03] blur-[100px] rounded-full pointer-events-none">
                         </div>
@@ -946,8 +954,8 @@
                         </div>
                     </div>
 
-                <!-- Out of Scope -->
-                <div class="glass-card rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-12 lg:p-16 opacity-50 relative overflow-hidden tilt-card">
+                    <!-- Out of Scope -->
+                    <div class="glass-card rounded-[2.5rem] p-12 md:p-16 opacity-50 relative overflow-hidden tilt-card">
                         <div
                             class="absolute -top-20 -left-20 w-40 h-40 bg-white/[0.02] blur-[80px] rounded-full pointer-events-none">
                         </div>
