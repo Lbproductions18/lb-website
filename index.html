@@ -609,10 +609,17 @@
                 justify-content: center;
             }
             
-            /* Stats section - center content */
+            /* Stats section - centered vertically */
+            #stats.snap-section-auto,
             .snap-section-auto {
-                min-height: auto;
-                padding: 3rem 1rem;
+                min-height: 100vh;
+                padding: 2rem 1rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                scroll-snap-align: center;
+                scroll-snap-stop: always;
             }
             
             /* Cards - full width and centered */
