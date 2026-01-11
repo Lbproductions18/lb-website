@@ -131,20 +131,9 @@
                 transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
             }
             
-            /* Blurred state (default for cards not in view) */
-            #methodology .glass-card.blurred {
-                filter: blur(12px);
-                opacity: 0.2;
-                transform: scale(0.92);
-                pointer-events: none;
-            }
-            
-            /* Active card (in view) */
-            #methodology .glass-card.in-view {
-                filter: blur(0);
-                opacity: 1;
-                transform: scale(1);
-                pointer-events: auto;
+            /* Cards transition */
+            #methodology .glass-card {
+                transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s ease !important;
             }
         }
 
@@ -1694,63 +1683,71 @@
         initMatrixTypewriter();
 
         // ===== PROTOCOL CARDS BLUR EFFECT (MOBILE) =====
-        function initProtocolCardsBlur() {
-            const isMobile = window.innerWidth <= 768;
-            if (!isMobile) return;
+        (function() {
+            function isMobile() {
+                return window.innerWidth <= 768;
+            }
             
-            const methodologySection = document.getElementById('methodology');
-            if (!methodologySection) return;
-            
-            const cards = methodologySection.querySelectorAll('.glass-card');
-            if (cards.length === 0) return;
-            
-            // Function to update blur based on scroll position
-            function updateCardBlur() {
-                const viewportCenter = window.innerHeight / 2;
+            function applyBlurEffect() {
+                if (!isMobile()) {
+                    // Reset styles on desktop
+                    document.querySelectorAll('#methodology .glass-card').forEach(card => {
+                        card.style.filter = '';
+                        card.style.opacity = '';
+                        card.style.transform = '';
+                    });
+                    return;
+                }
+                
+                const cards = document.querySelectorAll('#methodology .glass-card');
+                if (cards.length === 0) return;
+                
+                const viewportHeight = window.innerHeight;
+                const viewportCenter = viewportHeight / 2;
                 
                 cards.forEach(card => {
                     const rect = card.getBoundingClientRect();
                     const cardCenter = rect.top + rect.height / 2;
                     const distanceFromCenter = Math.abs(cardCenter - viewportCenter);
                     
-                    // If card center is within 150px of viewport center, it's "in view"
-                    if (distanceFromCenter < 150) {
-                        card.classList.remove('blurred');
-                        card.classList.add('in-view');
+                    // Card is "in view" if its center is within 200px of viewport center
+                    if (distanceFromCenter < 200) {
+                        // Active card - clear and visible
+                        card.style.filter = 'blur(0px)';
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
                     } else {
-                        card.classList.add('blurred');
-                        card.classList.remove('in-view');
+                        // Inactive card - blurred and dark
+                        card.style.filter = 'blur(15px)';
+                        card.style.opacity = '0.15';
+                        card.style.transform = 'scale(0.9)';
                     }
                 });
             }
             
-            // Listen to scroll on snap container
-            snapContainer.addEventListener('scroll', updateCardBlur, { passive: true });
+            // Run on scroll
+            const container = document.getElementById('snap-container');
+            if (container) {
+                container.addEventListener('scroll', applyBlurEffect, { passive: true });
+            }
             
-            // Also listen to touchmove for smoother mobile experience
-            snapContainer.addEventListener('touchmove', updateCardBlur, { passive: true });
+            // Also run on window scroll as fallback
+            window.addEventListener('scroll', applyBlurEffect, { passive: true });
             
-            // Initial update
-            updateCardBlur();
-            
-            // Update on scroll end as well
-            let scrollTimeout;
-            snapContainer.addEventListener('scroll', () => {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(updateCardBlur, 100);
-            }, { passive: true });
-        }
-        
-        // Init on load and resize
-        setTimeout(initProtocolCardsBlur, 500);
-        
-        window.addEventListener('resize', () => {
-            const cards = document.querySelectorAll('#methodology .glass-card');
-            cards.forEach(card => {
-                card.classList.remove('blurred', 'in-view');
+            // Run on load
+            window.addEventListener('load', () => {
+                setTimeout(applyBlurEffect, 100);
             });
-            setTimeout(initProtocolCardsBlur, 100);
-        });
+            
+            // Run on resize
+            window.addEventListener('resize', applyBlurEffect);
+            
+            // Initial run
+            setTimeout(applyBlurEffect, 500);
+            
+            // Run periodically to catch any missed updates
+            setInterval(applyBlurEffect, 500);
+        })();
     </script>
 </body>
 
