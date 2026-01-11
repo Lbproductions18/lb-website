@@ -82,20 +82,47 @@
                 scroll-snap-stop: always;
             }
             
-            /* Protocol section - each card is a snap point */
+            /* Protocol section - each card in its own viewport */
             #methodology {
                 min-height: auto !important;
-                scroll-snap-align: none;
+                padding: 0 !important;
             }
             
-            #methodology .glass-card {
-                scroll-snap-align: start;
-                scroll-snap-stop: always;
-                scroll-margin-top: 80px;
-                min-height: 80vh;
+            #methodology > .max-w-7xl {
+                padding: 0 1rem;
+            }
+            
+            #methodology .mb-24 {
+                min-height: 100vh;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
+                align-items: center;
+                scroll-snap-align: center;
+                scroll-snap-stop: always;
+                margin-bottom: 0 !important;
+            }
+            
+            #methodology .grid {
+                display: flex;
+                flex-direction: column;
+                gap: 0 !important;
+            }
+            
+            /* Each card centered in full viewport */
+            #methodology .glass-card {
+                min-height: 100vh;
+                scroll-snap-align: center;
+                scroll-snap-stop: always;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.05);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                background: rgba(255, 255, 255, 0.01);
             }
         }
 
