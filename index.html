@@ -107,21 +107,16 @@
             #methodology .grid {
                 display: flex;
                 flex-direction: column;
-                gap: 0 !important;
+                gap: 1.5rem !important;
+                padding: 2rem 0;
             }
             
-            /* Each card sits in a 100vh tall "slot" */
+            /* Cards with blur effect when not in view */
             #methodology .glass-card {
-                /* Card stays its natural size */
                 height: auto;
                 min-height: auto;
                 padding: 2rem !important;
-                
-                /* Add massive margin to create 100vh spacing */
-                margin-top: calc(50vh - 200px) !important;
-                margin-bottom: calc(50vh - 200px) !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
+                margin: 0 !important;
                 
                 /* Snap behavior */
                 scroll-snap-align: center;
@@ -131,16 +126,23 @@
                 border-radius: 1.5rem;
                 background: rgba(255, 255, 255, 0.02);
                 border: 1px solid rgba(255, 255, 255, 0.1);
+                
+                /* Blur effect - will be controlled by JS */
+                transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
             }
             
-            /* First card - less top margin */
-            #methodology .glass-card:first-child {
-                margin-top: 2rem !important;
+            /* Blurred state (default for cards not in view) */
+            #methodology .glass-card.blurred {
+                filter: blur(8px);
+                opacity: 0.4;
+                transform: scale(0.95);
             }
             
-            /* Last card - less bottom margin */  
-            #methodology .glass-card:last-child {
-                margin-bottom: 2rem !important;
+            /* Active card (in view) */
+            #methodology .glass-card.in-view {
+                filter: blur(0);
+                opacity: 1;
+                transform: scale(1);
             }
         }
 
@@ -1681,6 +1683,62 @@
 
         // Initialize on DOM ready
         initMatrixTypewriter();
+
+        // ===== PROTOCOL CARDS BLUR EFFECT (MOBILE) =====
+        function initProtocolCardsBlur() {
+            const isMobile = window.innerWidth <= 768;
+            if (!isMobile) return;
+            
+            const methodologySection = document.getElementById('methodology');
+            if (!methodologySection) return;
+            
+            const cards = methodologySection.querySelectorAll('.glass-card');
+            if (cards.length === 0) return;
+            
+            // Initially blur all cards
+            cards.forEach(card => card.classList.add('blurred'));
+            
+            // Create observer to detect which card is in view
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                        // This card is in view - unblur it
+                        entry.target.classList.remove('blurred');
+                        entry.target.classList.add('in-view');
+                        
+                        // Blur other cards
+                        cards.forEach(card => {
+                            if (card !== entry.target) {
+                                card.classList.add('blurred');
+                                card.classList.remove('in-view');
+                            }
+                        });
+                    }
+                });
+            }, {
+                root: snapContainer,
+                threshold: 0.5
+            });
+            
+            cards.forEach(card => observer.observe(card));
+            
+            // Set first card as active initially
+            if (cards[0]) {
+                cards[0].classList.remove('blurred');
+                cards[0].classList.add('in-view');
+            }
+        }
+        
+        // Init on load and resize
+        initProtocolCardsBlur();
+        window.addEventListener('resize', () => {
+            // Re-init on resize to handle orientation changes
+            const cards = document.querySelectorAll('#methodology .glass-card');
+            cards.forEach(card => {
+                card.classList.remove('blurred', 'in-view');
+            });
+            initProtocolCardsBlur();
+        });
     </script>
 </body>
 
