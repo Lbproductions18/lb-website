@@ -80,48 +80,57 @@
                 scroll-snap-stop: always;
             }
             
-            /* Protocol section */
+            /* Protocol section - not a snap section on mobile */
             #methodology {
                 min-height: auto !important;
                 padding: 0 !important;
             }
             
             #methodology > .max-w-7xl {
-                padding: 0 1rem;
+                padding: 0;
             }
             
-            /* Title section */
-            #methodology .mb-24 {
+            /* Title wrapper - takes full viewport, centers title */
+            #methodology .protocol-title-wrapper {
                 height: 100vh;
+                min-height: 100vh;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                scroll-snap-align: center;
-                scroll-snap-stop: always;
+                padding-top: 4rem;
                 margin-bottom: 0 !important;
+                scroll-snap-align: start;
+                scroll-snap-stop: always;
             }
             
-            /* Protocol cards grid - stacked */
-            #methodology .grid {
+            /* Protocol cards container - stacked */
+            #methodology .protocol-cards-container {
                 display: flex;
                 flex-direction: column;
-                gap: 2rem !important;
-                padding: 1rem;
+                gap: 0 !important;
+                padding: 0;
             }
             
-            /* Protocol cards */
-            #methodology .glass-card {
-                height: auto;
-                min-height: auto;
-                padding: 2rem !important;
-                margin: 0 auto !important;
-                width: calc(100% - 2rem);
-                max-width: 400px;
-                
-                /* Snap behavior */
-                scroll-snap-align: center;
+            /* Card wrapper - takes full viewport, centers card */
+            #methodology .protocol-card-wrapper {
+                height: 100vh;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+                scroll-snap-align: start;
                 scroll-snap-stop: always;
+            }
+            
+            /* Protocol card - natural size, centered by wrapper */
+            #methodology .protocol-card {
+                height: auto !important;
+                min-height: auto !important;
+                padding: 2rem !important;
+                width: 100%;
+                max-width: 350px;
                 
                 /* Card styling */
                 border-radius: 1.5rem;
@@ -133,13 +142,13 @@
             }
             
             /* CSS Fallback: Cards 2 and 3 blurred by default */
-            #methodology .glass-card.blurred {
+            #methodology .protocol-card.blurred {
                 filter: blur(6px) !important;
                 opacity: 0.3 !important;
                 transform: scale(0.96) !important;
             }
             
-            #methodology .glass-card.active {
+            #methodology .protocol-card.active {
                 filter: blur(0px) !important;
                 opacity: 1 !important;
                 transform: scale(1) !important;
@@ -851,81 +860,88 @@
         </section>
 
         <!-- Methodology Section -->
-        <section class="snap-section pt-24 pb-12 md:py-32 relative" id="methodology" data-section="1">
+        <section class="md:snap-section pt-24 pb-12 md:py-32 relative" id="methodology" data-section="1">
             <div class="max-w-7xl mx-auto px-6">
-                <div class="mb-8 md:mb-24 text-center">
-                    <h2 class="reveal-text text-3xl md:text-4xl font-display font-light text-white mb-4">Le Protocole Action.Flow</h2>
+                <!-- Title - has its own snap on mobile -->
+                <div class="protocol-title-wrapper mb-8 md:mb-24 text-center">
+                    <h2 class="reveal-text text-2xl md:text-4xl font-display font-light text-white mb-4">Le Protocole Action.Flow</h2>
                     <div class="reveal-text w-24 h-px bg-white/20 mx-auto" style="transition-delay: 0.1s"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                    <!-- Card 1 -->
-                    <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 01</span>
-                            <span
-                                class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">query_stats</span>
-                        </div>
-                        <div class="space-y-4">
-                            <h3 class="text-xl font-medium text-white">Quantum Diagnostic</h3>
-                            <p class="text-sm text-zinc-600 leading-relaxed font-light">Deep flow audit and friction
-                                mapping. We measure the invisible to optimize the concrete.</p>
-                        </div>
-                        <div class="flex items-end gap-1.5 h-16 pt-4">
-                            <div class="chart-bar h-[40%]" data-delay="0"></div>
-                            <div class="chart-bar h-[70%]" data-delay="0.1"></div>
-                            <div class="chart-bar h-[55%]" data-delay="0.2"></div>
-                            <div class="chart-bar h-[90%]" data-delay="0.3"></div>
-                            <div class="chart-bar h-[65%]" data-delay="0.4"></div>
-                            <div class="chart-bar h-[100%]" data-delay="0.5"></div>
-                        </div>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 02</span>
-                            <span
-                                class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">hub</span>
-                        </div>
-                        <div class="space-y-4">
-                            <h3 class="text-xl font-medium text-white">Neural Architecture</h3>
-                            <p class="text-sm text-zinc-600 leading-relaxed font-light">Design of a bespoke ecosystem
-                                merging Gen-AI with robust No-Code infrastructure.</p>
-                        </div>
-                        <div class="relative w-16 h-16 flex items-center justify-center">
-                            <svg class="absolute inset-0 w-full h-full -rotate-90">
-                                <circle class="text-white/5" cx="32" cy="32" fill="transparent" r="28"
-                                    stroke="currentColor" stroke-width="1.5"></circle>
-                                <circle class="progress-circle text-white/40" cx="32" cy="32" fill="transparent" r="28"
-                                    stroke="currentColor" stroke-dasharray="175" stroke-linecap="round" stroke-width="2"
-                                    data-target="60"></circle>
-                            </svg>
-                            <span class="text-[10px] font-bold text-white/60 counter" data-target="65"
-                                data-suffix="%">0%</span>
+                <div class="protocol-cards-container grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <!-- Card 1 Wrapper -->
+                    <div class="protocol-card-wrapper">
+                        <div class="glass-card protocol-card p-10 rounded-3xl space-y-8 relative group tilt-card">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 01</span>
+                                <span
+                                    class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">query_stats</span>
+                            </div>
+                            <div class="space-y-4">
+                                <h3 class="text-xl font-medium text-white">Quantum Diagnostic</h3>
+                                <p class="text-sm text-zinc-600 leading-relaxed font-light">Deep flow audit and friction
+                                    mapping. We measure the invisible to optimize the concrete.</p>
+                            </div>
+                            <div class="flex items-end gap-1.5 h-16 pt-4">
+                                <div class="chart-bar h-[40%]" data-delay="0"></div>
+                                <div class="chart-bar h-[70%]" data-delay="0.1"></div>
+                                <div class="chart-bar h-[55%]" data-delay="0.2"></div>
+                                <div class="chart-bar h-[90%]" data-delay="0.3"></div>
+                                <div class="chart-bar h-[65%]" data-delay="0.4"></div>
+                                <div class="chart-bar h-[100%]" data-delay="0.5"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Card 3 -->
-                    <div class="glass-card p-10 rounded-3xl space-y-8 relative group tilt-card">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 03</span>
-                            <span
-                                class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">speed</span>
+                    <!-- Card 2 Wrapper -->
+                    <div class="protocol-card-wrapper">
+                        <div class="glass-card protocol-card p-10 rounded-3xl space-y-8 relative group tilt-card">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 02</span>
+                                <span
+                                    class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">hub</span>
+                            </div>
+                            <div class="space-y-4">
+                                <h3 class="text-xl font-medium text-white">Neural Architecture</h3>
+                                <p class="text-sm text-zinc-600 leading-relaxed font-light">Design of a bespoke ecosystem
+                                    merging Gen-AI with robust No-Code infrastructure.</p>
+                            </div>
+                            <div class="relative w-16 h-16 flex items-center justify-center">
+                                <svg class="absolute inset-0 w-full h-full -rotate-90">
+                                    <circle class="text-white/5" cx="32" cy="32" fill="transparent" r="28"
+                                        stroke="currentColor" stroke-width="1.5"></circle>
+                                    <circle class="progress-circle text-white/40" cx="32" cy="32" fill="transparent" r="28"
+                                        stroke="currentColor" stroke-dasharray="175" stroke-linecap="round" stroke-width="2"
+                                        data-target="60"></circle>
+                                </svg>
+                                <span class="text-[10px] font-bold text-white/60 counter" data-target="65"
+                                    data-suffix="%">0%</span>
+                            </div>
                         </div>
-                        <div class="space-y-4">
-                            <h3 class="text-xl font-medium text-white">Agile Deployment</h3>
-                            <p class="text-sm text-zinc-600 leading-relaxed font-light">Orchestrated production launch
-                                and KPI steering to ensure immediate ROI.</p>
-                        </div>
-                        <div class="h-16 flex items-center relative overflow-hidden">
-                            <svg class="w-full h-8 fill-none" viewBox="0 0 100 20">
-                                <path class="flow-line stroke-white/30" d="M0 10 Q 25 2, 50 10 T 100 10"
-                                    stroke-width="0.5"></path>
-                                <path class="flow-line stroke-white/10" d="M0 15 Q 25 5, 50 15 T 100 15"
-                                    stroke-width="0.5" style="animation-delay: 0.3s"></path>
-                            </svg>
-                            <div class="absolute right-0 w-1 h-1 bg-white rounded-full animate-ping"></div>
+                    </div>
+
+                    <!-- Card 3 Wrapper -->
+                    <div class="protocol-card-wrapper">
+                        <div class="glass-card protocol-card p-10 rounded-3xl space-y-8 relative group tilt-card">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 03</span>
+                                <span
+                                    class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">speed</span>
+                            </div>
+                            <div class="space-y-4">
+                                <h3 class="text-xl font-medium text-white">Agile Deployment</h3>
+                                <p class="text-sm text-zinc-600 leading-relaxed font-light">Orchestrated production launch
+                                    and KPI steering to ensure immediate ROI.</p>
+                            </div>
+                            <div class="h-16 flex items-center relative overflow-hidden">
+                                <svg class="w-full h-8 fill-none" viewBox="0 0 100 20">
+                                    <path class="flow-line stroke-white/30" d="M0 10 Q 25 2, 50 10 T 100 10"
+                                        stroke-width="0.5"></path>
+                                    <path class="flow-line stroke-white/10" d="M0 15 Q 25 5, 50 15 T 100 15"
+                                        stroke-width="0.5" style="animation-delay: 0.3s"></path>
+                                </svg>
+                                <div class="absolute right-0 w-1 h-1 bg-white rounded-full animate-ping"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1775,7 +1791,7 @@
             }
             
             function applyBlurEffect() {
-                const cards = document.querySelectorAll('#methodology .glass-card');
+                const cards = document.querySelectorAll('#methodology .protocol-card');
                 if (cards.length === 0) return;
                 
                 if (!isMobile()) {
@@ -1789,18 +1805,22 @@
                 const viewportHeight = window.innerHeight;
                 const viewportCenter = viewportHeight / 2;
                 
-                // Find the card closest to viewport center
+                // Find the card wrapper closest to viewport center
                 let closestCard = null;
                 let minDistance = Infinity;
                 
                 cards.forEach(card => {
-                    const rect = card.getBoundingClientRect();
-                    const cardCenter = rect.top + rect.height / 2;
-                    const distance = Math.abs(cardCenter - viewportCenter);
-                    
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestCard = card;
+                    // Use the wrapper's position for accurate snapping
+                    const wrapper = card.closest('.protocol-card-wrapper');
+                    if (wrapper) {
+                        const rect = wrapper.getBoundingClientRect();
+                        const wrapperCenter = rect.top + rect.height / 2;
+                        const distance = Math.abs(wrapperCenter - viewportCenter);
+                        
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestCard = card;
+                        }
                     }
                 });
                 
@@ -1818,7 +1838,7 @@
             
             // Apply blur immediately to all cards except first one on init
             function initBlurState() {
-                const cards = document.querySelectorAll('#methodology .glass-card');
+                const cards = document.querySelectorAll('#methodology .protocol-card');
                 if (!isMobile()) {
                     cards.forEach(card => card.classList.remove('blurred', 'active'));
                     return;
