@@ -133,7 +133,7 @@
             
             /* Cards transition - fast */
             #methodology .glass-card {
-                transition: filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease !important;
+                transition: filter 0.25s ease, opacity 0.25s ease, transform 0.25s ease !important;
             }
         }
 
@@ -1717,8 +1717,8 @@
                         card.style.opacity = '1';
                         card.style.transform = 'scale(1)';
                     } else {
-                        // Inactive card - slightly blurred and darker (still readable)
-                        card.style.filter = 'blur(3px)';
+                        // Inactive card - slightly darker, light blur (still readable)
+                        card.style.filter = 'blur(4px)';
                         card.style.opacity = '0.35';
                         card.style.transform = 'scale(0.97)';
                     }
@@ -1745,7 +1745,7 @@
             
             // Also run after a tiny delay to catch late renders
             setTimeout(applyBlurEffect, 50);
-            setTimeout(applyBlurEffect, 150);
+            setTimeout(applyBlurEffect, 200);
         })();
     </script>
 </body>
