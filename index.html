@@ -70,27 +70,36 @@
         }
 
         @media (max-width: 768px) {
-            /* Mobile: keep mandatory snap */
+            /* Mobile: CSS-based snap scrolling */
             .snap-container {
                 scroll-snap-type: y mandatory;
+                overflow-y: auto !important;
             }
             
             .snap-section {
                 scroll-snap-align: start;
                 scroll-snap-stop: always;
+                height: auto !important;
+                min-height: 100vh !important;
+                max-height: none !important;
+                overflow: visible !important;
             }
             
-            /* Protocol section - not a snap section on mobile */
+            /* Protocol section - contains multiple snap points */
             #methodology {
+                height: auto !important;
                 min-height: auto !important;
+                max-height: none !important;
                 padding: 0 !important;
+                overflow: visible !important;
+                scroll-snap-align: none !important;
             }
             
             #methodology > .max-w-7xl {
                 padding: 0;
             }
             
-            /* Title wrapper - takes full viewport, centers title */
+            /* Title wrapper - its own snap point */
             #methodology .protocol-title-wrapper {
                 height: 100vh;
                 min-height: 100vh;
@@ -112,7 +121,7 @@
                 padding: 0;
             }
             
-            /* Card wrapper - takes full viewport, centers card */
+            /* Card wrapper - its own snap point */
             #methodology .protocol-card-wrapper {
                 height: 100vh;
                 min-height: 100vh;
@@ -883,7 +892,7 @@
         </section>
 
         <!-- Methodology Section -->
-        <section class="md:snap-section pt-24 pb-12 md:py-32 relative" id="methodology" data-section="1">
+        <section class="snap-section pt-24 pb-12 md:py-32 relative" id="methodology" data-section="1">
             <div class="max-w-7xl mx-auto px-6">
                 <!-- Title - has its own snap on mobile -->
                 <div class="protocol-title-wrapper mb-8 md:mb-24 text-center">
@@ -1678,8 +1687,11 @@
             }
         });
 
-        // Wheel navigation - immediate section change
+        // Wheel navigation - immediate section change (desktop only)
         snapContainer.addEventListener('wheel', (e) => {
+            // On mobile, let CSS scroll-snap handle it
+            if (window.innerWidth <= 768) return;
+            
             e.preventDefault();
             if (isScrolling) return;
             
@@ -1690,16 +1702,22 @@
             }
         }, { passive: false });
 
-        // Touch navigation - immediate section change
+        // Touch navigation - immediate section change (desktop/tablet only, not mobile)
+        // On mobile, CSS scroll-snap handles everything
         let touchStartY = 0;
         let touchEndY = 0;
         const touchThreshold = 30;
 
         snapContainer.addEventListener('touchstart', (e) => {
+            // On mobile, let CSS scroll-snap handle it
+            if (window.innerWidth <= 768) return;
             touchStartY = e.touches[0].clientY;
         }, { passive: true });
 
         snapContainer.addEventListener('touchmove', (e) => {
+            // On mobile, let CSS scroll-snap handle it
+            if (window.innerWidth <= 768) return;
+            
             if (isScrolling) {
                 e.preventDefault();
                 return;
@@ -1708,6 +1726,9 @@
         }, { passive: false });
 
         snapContainer.addEventListener('touchend', (e) => {
+            // On mobile, let CSS scroll-snap handle it
+            if (window.innerWidth <= 768) return;
+            
             if (isScrolling) return;
             
             const diff = touchStartY - touchEndY;
