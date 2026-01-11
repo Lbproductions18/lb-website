@@ -121,19 +121,29 @@
                 padding: 0;
             }
             
-            /* Card wrapper - its own snap point */
+            /* Card wrapper - snap point with deck visibility */
             #methodology .protocol-card-wrapper {
-                height: 100vh;
-                min-height: 100vh;
+                height: auto;
+                min-height: auto;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 1rem;
-                scroll-snap-align: start;
+                padding: 15vh 1rem;
+                scroll-snap-align: center;
                 scroll-snap-stop: always;
             }
             
-            /* Protocol card - natural size, centered by wrapper */
+            /* First card needs extra top padding */
+            #methodology .protocol-card-wrapper:first-child {
+                padding-top: 5vh;
+            }
+            
+            /* Last card needs extra bottom padding */
+            #methodology .protocol-card-wrapper:last-child {
+                padding-bottom: 20vh;
+            }
+            
+            /* Protocol card - natural size */
             #methodology .protocol-card {
                 height: auto !important;
                 min-height: auto !important;
@@ -147,16 +157,17 @@
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 
                 /* Blur effect transition */
-                transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease !important;
+                transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease !important;
             }
             
-            /* CSS Fallback: Cards 2 and 3 blurred by default */
+            /* Blurred state for inactive cards */
             #methodology .protocol-card.blurred {
-                filter: blur(6px) !important;
-                opacity: 0.3 !important;
-                transform: scale(0.96) !important;
+                filter: blur(4px) !important;
+                opacity: 0.35 !important;
+                transform: scale(0.95) !important;
             }
             
+            /* Active card - clear and full opacity */
             #methodology .protocol-card.active {
                 filter: blur(0px) !important;
                 opacity: 1 !important;
