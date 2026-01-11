@@ -986,19 +986,19 @@
                     </div>
                     <div class="space-y-2">
                         <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
-                            <span>80 h</span>
+                            <span class="counter" data-target="80" data-suffix=" h">0 h</span>
                         </div>
                         <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">Temps récupéré / mois</div>
                     </div>
                     <div class="space-y-2">
                         <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
-                            <span class="whitespace-nowrap">6 000$</span>
+                            <span class="counter whitespace-nowrap" data-target="6000" data-suffix="$" data-format="space">0$</span>
                         </div>
                         <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">Valeur récupérée / mois</div>
                     </div>
                     <div class="space-y-2">
                         <div class="text-4xl md:text-5xl font-display font-light text-white text-glow">
-                            <span>14 M$+</span>
+                            <span class="counter" data-target="14" data-suffix=" M$+">0 M$+</span>
                         </div>
                         <div class="text-[10px] tracking-[0.3em] uppercase text-white/40">Revenus soutenus</div>
                     </div>
@@ -1571,6 +1571,15 @@
 
         // ===== ANIMATED COUNTERS =====
         const counters = document.querySelectorAll('.counter');
+        
+        // Format number with spaces (e.g., 6000 → "6 000")
+        function formatNumber(num, useSpace) {
+            if (useSpace) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            }
+            return num.toString();
+        }
+        
         const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
@@ -1578,15 +1587,16 @@
                     const target = parseInt(entry.target.dataset.target);
                     const prefix = entry.target.dataset.prefix || '';
                     const suffix = entry.target.dataset.suffix || '';
+                    const useSpace = entry.target.dataset.format === 'space';
                     let current = 0;
                     const increment = target / 60;
                     const updateCounter = () => {
                         current += increment;
                         if (current < target) {
-                            entry.target.textContent = prefix + Math.floor(current) + suffix;
+                            entry.target.textContent = prefix + formatNumber(Math.floor(current), useSpace) + suffix;
                             requestAnimationFrame(updateCounter);
                         } else {
-                            entry.target.textContent = prefix + target + suffix;
+                            entry.target.textContent = prefix + formatNumber(target, useSpace) + suffix;
                         }
                     };
                     updateCounter();
