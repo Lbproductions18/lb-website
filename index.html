@@ -1248,14 +1248,26 @@
         resizeParticleCanvas();
         window.addEventListener('resize', resizeParticleCanvas);
 
+        // Data words for particle labels
+        const dataWords = [
+            'SYNC_NODE', 'DATA_FLUX', 'PROCESS_ID', 'HASH_0x4F', 'QUEUE_POP',
+            'BATCH_RUN', 'TASK_INIT', 'FLOW_CTRL', 'MEM_ALLOC', 'HEAP_SORT',
+            'ASYNC_IO', 'YIELD_MAX', 'LOAD_BAL', 'CACHE_HIT', 'REF_COUNT',
+            'GC_SWEEP', 'MUTEX_LK', 'FORK_JOIN', 'PIPE_BUF', 'SHARD_KEY',
+            'NODE_42', 'CRON_JOB', 'API_CALL', 'DB_QUERY', 'NET_REQ'
+        ];
+
         class Particle {
-            constructor() {
+            constructor(index) {
                 this.x = Math.random() * particleCanvas.width;
                 this.y = Math.random() * particleCanvas.height;
                 this.vx = (Math.random() - 0.5) * 0.5;
                 this.vy = (Math.random() - 0.5) * 0.5;
                 this.radius = Math.random() * 1.5 + 0.5;
                 this.depth = Math.random(); // For parallax
+                // Only particles with high depth (close to viewer) get labels
+                this.hasLabel = this.depth > 0.7 && Math.random() > 0.6;
+                this.label = dataWords[index % dataWords.length];
             }
 
             update(scrollY) {
@@ -1272,15 +1284,28 @@
             }
 
             draw(parallaxOffset) {
+                const y = this.y - parallaxOffset;
+                
+                // Draw particle dot
                 particleCtx.beginPath();
-                particleCtx.arc(this.x, this.y - parallaxOffset, this.radius, 0, Math.PI * 2);
+                particleCtx.arc(this.x, y, this.radius, 0, Math.PI * 2);
                 particleCtx.fillStyle = `rgba(255, 255, 255, ${0.3 + this.depth * 0.4})`;
                 particleCtx.fill();
+                
+                // Draw label if particle has one
+                if (this.hasLabel) {
+                    // Text opacity based on depth (closer = more visible)
+                    const textOpacity = (this.depth - 0.7) * 2; // 0 to 0.6
+                    particleCtx.font = '9px monospace';
+                    particleCtx.fillStyle = `rgba(255, 255, 255, ${textOpacity * 0.5})`;
+                    particleCtx.textAlign = 'center';
+                    particleCtx.fillText(this.label, this.x, y + 12);
+                }
             }
         }
 
         for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
+            particles.push(new Particle(i));
         }
 
         function drawParticles() {
