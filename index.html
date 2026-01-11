@@ -988,6 +988,8 @@
                         <div class="glass-card protocol-card p-10 rounded-3xl space-y-8 relative group tilt-card">
                             <div class="flex justify-between items-center">
                                 <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 01</span>
+                                <span
+                                    class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">query_stats</span>
                             </div>
                             <div class="space-y-4">
                                 <h3 class="text-xl font-medium text-white">Diagnostic des opérations</h3>
@@ -1014,6 +1016,8 @@
                         <div class="glass-card protocol-card p-10 rounded-3xl space-y-8 relative group tilt-card">
                             <div class="flex justify-between items-center">
                                 <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 02</span>
+                                <span
+                                    class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">hub</span>
                             </div>
                             <div class="space-y-4">
                                 <h3 class="text-xl font-medium text-white">Conception du système</h3>
@@ -1044,6 +1048,8 @@
                         <div class="glass-card protocol-card p-10 rounded-3xl space-y-8 relative group tilt-card">
                             <div class="flex justify-between items-center">
                                 <span class="text-[10px] tracking-[0.4em] text-white/40 uppercase">Phase 03</span>
+                                <span
+                                    class="material-symbols-outlined text-white/30 group-hover:text-white transition-colors">speed</span>
                             </div>
                             <div class="space-y-4">
                                 <h3 class="text-xl font-medium text-white">Implémentation</h3>
@@ -1337,18 +1343,7 @@
                 this.x += Math.sin(Date.now() * 0.0005 + this.floatOffset) * 0.2;
                 this.y += Math.cos(Date.now() * 0.0004 + this.floatOffset) * 0.2;
 
-                // Magnetic attraction to mouse (desktop only)
-                const isMobileDevice = window.innerWidth <= 768;
-                if (!isMobileDevice) {
-                    const dx = particleMouseX - this.x;
-                    const dy = particleMouseY - this.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        const force = (150 - dist) / 150 * 0.02;
-                        this.x += dx * force;
-                        this.y += dy * force;
-                    }
-                }
+                // Magnetic attraction disabled - particles float freely
 
                 // Parallax
                 const parallaxOffset = scrollY * this.depth * 0.1;
