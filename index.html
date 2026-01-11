@@ -1725,6 +1725,26 @@
                 });
             }
             
+            // Apply blur immediately to all cards except first one on init
+            function initBlurState() {
+                if (!isMobile()) return;
+                
+                const cards = document.querySelectorAll('#methodology .glass-card');
+                cards.forEach((card, index) => {
+                    if (index === 0) {
+                        // First card starts visible
+                        card.style.filter = 'blur(0px)';
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                    } else {
+                        // Other cards start blurred
+                        card.style.filter = 'blur(4px)';
+                        card.style.opacity = '0.35';
+                        card.style.transform = 'scale(0.97)';
+                    }
+                });
+            }
+            
             // Run on scroll
             const container = document.getElementById('snap-container');
             if (container) {
@@ -1734,18 +1754,21 @@
             // Also run on window scroll as fallback
             window.addEventListener('scroll', applyBlurEffect, { passive: true });
             
-            // Run on load - immediate
-            window.addEventListener('load', applyBlurEffect);
+            // Run on load
+            window.addEventListener('load', () => {
+                initBlurState();
+                applyBlurEffect();
+            });
             
             // Run on resize
             window.addEventListener('resize', applyBlurEffect);
             
-            // Initial run - immediate
-            applyBlurEffect();
+            // Initial run - set default state immediately
+            initBlurState();
             
-            // Also run after a tiny delay to catch late renders
-            setTimeout(applyBlurEffect, 50);
-            setTimeout(applyBlurEffect, 200);
+            // Then apply position-based blur
+            requestAnimationFrame(applyBlurEffect);
+            setTimeout(applyBlurEffect, 100);
         })();
     </script>
 </body>
