@@ -891,8 +891,9 @@
         <div class="section-nav-dot" data-section="1" data-label="About"></div>
         <div class="section-nav-dot" data-section="2" data-label="Stats"></div>
         <div class="section-nav-dot" data-section="3" data-label="Protocol"></div>
-        <div class="section-nav-dot" data-section="4" data-label="Filter"></div>
-        <div class="section-nav-dot" data-section="5" data-label="Contact"></div>
+        <div class="section-nav-dot" data-section="4" data-label="Pour vous"></div>
+        <div class="section-nav-dot lg:hidden" data-section="5" data-label="Pas adapté"></div>
+        <div class="section-nav-dot" data-section="6" data-label="Contact"></div>
     </div>
 
     <!-- Snap Scroll Container -->
@@ -1154,20 +1155,19 @@
             </div>
         </section>
 
-        <!-- Expertise Section -->
-        <section class="snap-section py-12 md:py-32" id="expertise" data-section="4">
+        <!-- Expertise Section - Desktop (both cards together) -->
+        <section class="snap-section py-12 md:py-32 hidden lg:flex items-center" id="expertise-desktop" data-section="4">
             <div class="max-w-7xl mx-auto px-6">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="grid grid-cols-2 gap-12">
                     <!-- Target Profile -->
-                    <div class="glass-card rounded-[2.5rem] p-12 md:p-16 relative overflow-hidden tilt-card">
+                    <div class="glass-card rounded-[2.5rem] p-16 relative overflow-hidden tilt-card">
                         <div
                             class="absolute -top-20 -right-20 w-60 h-60 bg-white/[0.03] blur-[100px] rounded-full pointer-events-none">
                         </div>
                         <div class="absolute top-0 right-0 p-8 opacity-20">
                             <span class="material-symbols-outlined !text-6xl">check_circle</span>
                         </div>
-                        <h3
-                            class="reveal-text text-2xl font-display font-medium text-white mb-12">
+                        <h3 class="reveal-text text-2xl font-display font-medium text-white mb-12">
                             Cette approche est pour vous si
                         </h3>
                         <div class="space-y-8">
@@ -1203,15 +1203,14 @@
                     </div>
 
                     <!-- Out of Scope -->
-                    <div class="glass-card rounded-[2.5rem] p-12 md:p-16 relative overflow-hidden tilt-card">
+                    <div class="glass-card rounded-[2.5rem] p-16 relative overflow-hidden tilt-card">
                         <div
                             class="absolute -top-20 -left-20 w-40 h-40 bg-white/[0.02] blur-[80px] rounded-full pointer-events-none">
                         </div>
                         <div class="absolute top-0 right-0 p-8 opacity-20">
                             <span class="material-symbols-outlined !text-6xl text-red-500/50">block</span>
                         </div>
-                        <h3
-                            class="reveal-text text-2xl font-display font-medium text-white mb-12">
+                        <h3 class="reveal-text text-2xl font-display font-medium text-white mb-12">
                             Cette approche n'est pas adaptée si
                         </h3>
                         <div class="space-y-8">
@@ -1241,9 +1240,88 @@
                 </div>
             </div>
         </section>
+        
+        <!-- Expertise Section - Mobile Card 1 (Target Profile) -->
+        <section class="snap-section lg:hidden flex items-center justify-center px-4" id="expertise-mobile-1" data-section="4">
+            <div class="glass-card rounded-[2rem] p-8 relative overflow-hidden w-full max-w-md">
+                <div class="absolute -top-20 -right-20 w-60 h-60 bg-white/[0.03] blur-[100px] rounded-full pointer-events-none"></div>
+                <div class="absolute top-0 right-0 p-4 opacity-20">
+                    <span class="material-symbols-outlined !text-5xl">check_circle</span>
+                </div>
+                <h3 class="reveal-text text-xl font-display font-medium text-white mb-8">
+                    Cette approche est pour vous si
+                </h3>
+                <div class="space-y-5">
+                    <div class="reveal-text flex items-start gap-4">
+                        <div class="text-xl font-display font-light text-white text-glow whitespace-nowrap">10+</div>
+                        <div>
+                            <h4 class="text-white font-medium text-sm">Employés</h4>
+                            <p class="text-xs text-zinc-600 mt-1">Une équipe déjà en place, avec des opérations réelles à optimiser.</p>
+                        </div>
+                    </div>
+                    <div class="reveal-text flex items-start gap-4">
+                        <div class="text-xl font-display font-light text-white text-glow whitespace-nowrap">1 M$+</div>
+                        <div>
+                            <h4 class="text-white font-medium text-sm">Chiffre d'affaires</h4>
+                            <p class="text-xs text-zinc-600 mt-1">Assez de volume pour que l'automatisation ait un impact mesurable.</p>
+                        </div>
+                    </div>
+                    <div class="reveal-text flex items-start gap-4">
+                        <div class="text-xl font-display font-light text-white text-glow whitespace-nowrap">✓</div>
+                        <div>
+                            <h4 class="text-white font-medium text-sm">Processus existants</h4>
+                            <p class="text-xs text-zinc-600 mt-1">Il n'y a pas besoin d'être parfait, mais il faut une base fonctionnelle.</p>
+                        </div>
+                    </div>
+                    <div class="reveal-text flex items-start gap-4">
+                        <div class="text-xl font-display font-light text-white text-glow whitespace-nowrap">∞</div>
+                        <div>
+                            <h4 class="text-white font-medium text-sm">Vision long terme</h4>
+                            <p class="text-xs text-zinc-600 mt-1">Des dirigeants qui veulent structurer maintenant pour mieux évoluer.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Expertise Section - Mobile Card 2 (Out of Scope) -->
+        <section class="snap-section lg:hidden flex items-center justify-center px-4" id="expertise-mobile-2" data-section="5">
+            <div class="glass-card rounded-[2rem] p-8 relative overflow-hidden w-full max-w-md">
+                <div class="absolute -top-20 -left-20 w-40 h-40 bg-white/[0.02] blur-[80px] rounded-full pointer-events-none"></div>
+                <div class="absolute top-0 right-0 p-4 opacity-20">
+                    <span class="material-symbols-outlined !text-5xl text-red-500/50">block</span>
+                </div>
+                <h3 class="reveal-text text-xl font-display font-medium text-white mb-8">
+                    Cette approche n'est pas adaptée si
+                </h3>
+                <div class="space-y-5">
+                    <div class="reveal-text flex items-start gap-4">
+                        <span class="material-symbols-outlined text-white/50 mt-1">close</span>
+                        <div>
+                            <h4 class="text-white font-medium text-sm">L'entreprise est encore en démarrage</h4>
+                            <p class="text-xs text-zinc-600 mt-1">Quand tout reste à construire, il est trop tôt pour optimiser.</p>
+                        </div>
+                    </div>
+                    <div class="reveal-text flex items-start gap-4">
+                        <span class="material-symbols-outlined text-white/50 mt-1">close</span>
+                        <div>
+                            <h4 class="text-white font-medium text-sm">Le besoin est uniquement ponctuel</h4>
+                            <p class="text-xs text-zinc-600 mt-1">Je ne fais pas d'interventions rapides sans vision d'ensemble.</p>
+                        </div>
+                    </div>
+                    <div class="reveal-text flex items-start gap-4">
+                        <span class="material-symbols-outlined text-white/50 mt-1">close</span>
+                        <div>
+                            <h4 class="text-white font-medium text-sm">Il n'y a pas de budget ou de marge de manœuvre</h4>
+                            <p class="text-xs text-zinc-600 mt-1">L'optimisation sérieuse demande un minimum d'engagement.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Footer CTA -->
-        <footer class="snap-section py-40 relative" data-section="5">
+        <footer class="snap-section py-40 relative" data-section="6">
             <div class="max-w-4xl mx-auto px-6 relative z-10 text-center space-y-16">
                 <div class="space-y-6">
                     <h2 class="reveal-text text-4xl md:text-6xl font-display font-light text-white tracking-tight">Passez à la prochaine étape de votre <span id="footer-typewriter-word" class="italic font-normal text-glow-intense"></span><span id="footer-typewriter-cursor" class="typewriter-cursor">|</span></h2>
@@ -1710,7 +1788,6 @@
         // ===== FULL PAGE SNAP SCROLLING =====
         const snapContainer = document.getElementById('snap-container');
         const snapSections = document.querySelectorAll('.snap-section');
-        const navDots = document.querySelectorAll('.section-nav-dot');
         const navProgress = document.getElementById('nav-progress');
         let currentSection = 0;
         let isScrolling = false;
@@ -1719,15 +1796,31 @@
         let lastScrollTime = Date.now();
         const wheelThreshold = 80;
         const scrollDuration = 600;
+        
+        // Get only visible snap sections
+        function getVisibleSections() {
+            return Array.from(document.querySelectorAll('.snap-section')).filter(section => {
+                return section.offsetParent !== null && getComputedStyle(section).display !== 'none';
+            });
+        }
+        
+        // Get only visible nav dots
+        function getVisibleDots() {
+            return Array.from(document.querySelectorAll('.section-nav-dot')).filter(dot => {
+                return dot.offsetParent !== null && getComputedStyle(dot).display !== 'none';
+            });
+        }
 
         // Update navigation dots and progress
         function updateNav(index) {
+            const navDots = getVisibleDots();
             navDots.forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
             });
 
             // Update progress bar
-            const progress = (index / (snapSections.length - 1)) * 100;
+            const visibleSections = getVisibleSections();
+            const progress = (index / (visibleSections.length - 1)) * 100;
             navProgress.style.height = `${progress}%`;
 
             currentSection = index;
@@ -1735,7 +1828,8 @@
 
         // Scroll to specific section
         function scrollToSection(index) {
-            if (index < 0 || index >= snapSections.length) return;
+            const visibleSections = getVisibleSections();
+            if (index < 0 || index >= visibleSections.length) return;
             if (index === currentSection) return;
             if (isScrolling) return;
 
@@ -1743,7 +1837,7 @@
             lastScrollTime = Date.now();
             wheelAccumulator = 0;
 
-            const targetSection = snapSections[index];
+            const targetSection = visibleSections[index];
             targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             updateNav(index);
 
@@ -1756,10 +1850,15 @@
         }
 
         // Click on nav dots
-        navDots.forEach((dot, index) => {
+        // Initialize nav dot click handlers
+        document.querySelectorAll('.section-nav-dot').forEach(dot => {
             dot.addEventListener('click', () => {
                 if (!isScrolling) {
-                    scrollToSection(index);
+                    const visibleDots = getVisibleDots();
+                    const dotIndex = visibleDots.indexOf(dot);
+                    if (dotIndex !== -1) {
+                        scrollToSection(dotIndex);
+                    }
                 }
             });
         });
@@ -1779,7 +1878,7 @@
                 scrollToSection(0);
             } else if (e.key === 'End') {
                 e.preventDefault();
-                scrollToSection(snapSections.length - 1);
+                scrollToSection(getVisibleSections().length - 1);
             }
         });
 
@@ -1843,8 +1942,9 @@
         const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-                    const sectionIndex = parseInt(entry.target.dataset.section);
-                    if (!isNaN(sectionIndex) && !isScrolling) {
+                    const visibleSections = getVisibleSections();
+                    const sectionIndex = visibleSections.indexOf(entry.target);
+                    if (sectionIndex !== -1 && !isScrolling) {
                         currentSection = sectionIndex;
                         updateNav(sectionIndex);
                     }
@@ -1856,9 +1956,7 @@
         });
 
         snapSections.forEach(section => {
-            if (section.dataset.section) {
-                sectionObserver.observe(section);
-            }
+            sectionObserver.observe(section);
         });
 
         // Safety: reset stuck state
