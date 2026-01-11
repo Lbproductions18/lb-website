@@ -1712,22 +1712,33 @@
                 const viewportHeight = window.innerHeight;
                 const viewportCenter = viewportHeight / 2;
                 
+                // Find the card closest to viewport center
+                let closestCard = null;
+                let minDistance = Infinity;
+                
                 cards.forEach(card => {
                     const rect = card.getBoundingClientRect();
                     const cardCenter = rect.top + rect.height / 2;
-                    const distanceFromCenter = Math.abs(cardCenter - viewportCenter);
+                    const distance = Math.abs(cardCenter - viewportCenter);
                     
-                    // Card is "in view" if its center is within 200px of viewport center
-                    if (distanceFromCenter < 200) {
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestCard = card;
+                    }
+                });
+                
+                // Apply styles: only the closest card is visible, others are blurred
+                cards.forEach(card => {
+                    if (card === closestCard) {
                         // Active card - clear and visible
                         card.style.filter = 'blur(0px)';
                         card.style.opacity = '1';
                         card.style.transform = 'scale(1)';
                     } else {
-                        // Inactive card - slightly darker, light blur (still readable)
-                        card.style.filter = 'blur(4px)';
-                        card.style.opacity = '0.35';
-                        card.style.transform = 'scale(0.97)';
+                        // Inactive card - darker and blurred
+                        card.style.filter = 'blur(6px)';
+                        card.style.opacity = '0.3';
+                        card.style.transform = 'scale(0.96)';
                     }
                 });
             }
@@ -1745,37 +1756,53 @@
                         card.style.transform = 'scale(1)';
                     } else {
                         // Other cards start blurred
-                        card.style.filter = 'blur(4px)';
-                        card.style.opacity = '0.35';
-                        card.style.transform = 'scale(0.97)';
+                        card.style.filter = 'blur(6px)';
+                        card.style.opacity = '0.3';
+                        card.style.transform = 'scale(0.96)';
                     }
                 });
+            }
+            
+            // Run on scroll - with throttle for performance
+            let ticking = false;
+            function onScroll() {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        applyBlurEffect();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
             }
             
             // Run on scroll
             const container = document.getElementById('snap-container');
             if (container) {
-                container.addEventListener('scroll', applyBlurEffect, { passive: true });
+                container.addEventListener('scroll', onScroll, { passive: true });
             }
             
             // Also run on window scroll as fallback
-            window.addEventListener('scroll', applyBlurEffect, { passive: true });
+            window.addEventListener('scroll', onScroll, { passive: true });
             
             // Run on load
             window.addEventListener('load', () => {
                 initBlurState();
-                applyBlurEffect();
+                setTimeout(applyBlurEffect, 50);
             });
             
             // Run on resize
             window.addEventListener('resize', applyBlurEffect);
             
-            // Initial run - set default state immediately
+            // Initial run - set default state immediately (before DOM is fully ready)
             initBlurState();
             
-            // Then apply position-based blur
-            requestAnimationFrame(applyBlurEffect);
-            setTimeout(applyBlurEffect, 100);
+            // Run continuously for first 2 seconds to catch any timing issues
+            let initCount = 0;
+            const initInterval = setInterval(() => {
+                applyBlurEffect();
+                initCount++;
+                if (initCount >= 20) clearInterval(initInterval);
+            }, 100);
         })();
     </script>
 </body>
