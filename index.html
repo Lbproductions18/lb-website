@@ -1390,7 +1390,7 @@
                         const opacity = (1 - distance / connectionDistance) * 0.15;
                         particleCtx.beginPath();
                         particleCtx.moveTo(particles[i].x, particles[i].y - parallaxI);
-                        const parallaxJ = particles[j].depth * scrollY * 0.1;
+                        const parallaxJ = particles[j].z * scrollY * 0.1;
                         particleCtx.lineTo(particles[j].x, particles[j].y - parallaxJ);
                         particleCtx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
                         particleCtx.lineWidth = 0.5;
@@ -1401,7 +1401,7 @@
 
             // Draw particles
             particles.forEach(p => {
-                const parallax = p.depth * scrollY * 0.1;
+                const parallax = p.z * scrollY * 0.1;
                 p.draw(parallax);
             });
 
