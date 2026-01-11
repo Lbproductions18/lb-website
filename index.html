@@ -104,29 +104,22 @@
                 margin-bottom: 0 !important;
             }
             
+            /* Protocol cards grid - stacked */
             #methodology .grid {
                 display: flex;
                 flex-direction: column;
-                gap: 1.5rem !important;
-                padding: 2rem 0;
+                gap: 2rem !important;
+                padding: 1rem;
             }
             
-            /* Each card gets its own 100vh space */
-            #methodology .grid {
-                display: flex;
-                flex-direction: column;
-                gap: 0 !important;
-                padding: 0 !important;
-            }
-            
-            /* Card wrapper - full viewport height */
+            /* Protocol cards */
             #methodology .glass-card {
                 height: auto;
                 min-height: auto;
                 padding: 2rem !important;
-                margin: 0 1rem !important;
-                margin-top: calc(50vh - 200px) !important;
-                margin-bottom: calc(50vh - 200px) !important;
+                margin: 0 auto !important;
+                width: calc(100% - 2rem);
+                max-width: 400px;
                 
                 /* Snap behavior */
                 scroll-snap-align: center;
@@ -137,16 +130,8 @@
                 background: rgba(255, 255, 255, 0.02);
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 
-                /* Blur effect - will be controlled by JS */
-                transition: filter 0.25s ease, opacity 0.25s ease, transform 0.25s ease !important;
-            }
-            
-            /* Default state: cards 2 and 3 are blurred via CSS */
-            #methodology .glass-card:nth-child(2),
-            #methodology .glass-card:nth-child(3) {
-                filter: blur(6px);
-                opacity: 0.3;
-                transform: scale(0.96);
+                /* Blur effect - controlled by JS */
+                transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease !important;
             }
         }
 
