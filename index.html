@@ -1717,10 +1717,10 @@
                         card.style.opacity = '1';
                         card.style.transform = 'scale(1)';
                     } else {
-                        // Inactive card - blurred and dark
-                        card.style.filter = 'blur(15px)';
-                        card.style.opacity = '0.15';
-                        card.style.transform = 'scale(0.9)';
+                        // Inactive card - blurred and darker (but still visible)
+                        card.style.filter = 'blur(8px)';
+                        card.style.opacity = '0.4';
+                        card.style.transform = 'scale(0.95)';
                     }
                 });
             }
