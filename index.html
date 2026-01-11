@@ -82,7 +82,7 @@
                 scroll-snap-stop: always;
             }
             
-            /* Protocol section - each card in its own viewport */
+            /* Protocol section */
             #methodology {
                 min-height: auto !important;
                 padding: 0 !important;
@@ -92,8 +92,9 @@
                 padding: 0 1rem;
             }
             
+            /* Title section */
             #methodology .mb-24 {
-                min-height: 100vh;
+                height: 100vh;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -109,20 +110,37 @@
                 gap: 0 !important;
             }
             
-            /* Each card centered in full viewport */
+            /* Each card sits in a 100vh tall "slot" */
             #methodology .glass-card {
-                min-height: 100vh;
+                /* Card stays its natural size */
+                height: auto;
+                min-height: auto;
+                padding: 2rem !important;
+                
+                /* Add massive margin to create 100vh spacing */
+                margin-top: calc(50vh - 200px) !important;
+                margin-bottom: calc(50vh - 200px) !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                
+                /* Snap behavior */
                 scroll-snap-align: center;
                 scroll-snap-stop: always;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                border-radius: 0;
-                border-left: none;
-                border-right: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.05);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-                background: rgba(255, 255, 255, 0.01);
+                
+                /* Card styling */
+                border-radius: 1.5rem;
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            /* First card - less top margin */
+            #methodology .glass-card:first-child {
+                margin-top: 2rem !important;
+            }
+            
+            /* Last card - less bottom margin */  
+            #methodology .glass-card:last-child {
+                margin-bottom: 2rem !important;
             }
         }
 
