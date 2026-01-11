@@ -130,8 +130,21 @@
                 background: rgba(255, 255, 255, 0.02);
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 
-                /* Blur effect - controlled by JS */
+                /* Blur effect transition */
                 transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease !important;
+            }
+            
+            /* CSS Fallback: Cards 2 and 3 blurred by default */
+            #methodology .glass-card.blurred {
+                filter: blur(6px) !important;
+                opacity: 0.3 !important;
+                transform: scale(0.96) !important;
+            }
+            
+            #methodology .glass-card.active {
+                filter: blur(0px) !important;
+                opacity: 1 !important;
+                transform: scale(1) !important;
             }
         }
 
@@ -1710,18 +1723,16 @@
             }
             
             function applyBlurEffect() {
+                const cards = document.querySelectorAll('#methodology .glass-card');
+                if (cards.length === 0) return;
+                
                 if (!isMobile()) {
-                    // Reset styles on desktop
-                    document.querySelectorAll('#methodology .glass-card').forEach(card => {
-                        card.style.filter = '';
-                        card.style.opacity = '';
-                        card.style.transform = '';
+                    // Reset classes on desktop
+                    cards.forEach(card => {
+                        card.classList.remove('blurred', 'active');
                     });
                     return;
                 }
-                
-                const cards = document.querySelectorAll('#methodology .glass-card');
-                if (cards.length === 0) return;
                 
                 const viewportHeight = window.innerHeight;
                 const viewportCenter = viewportHeight / 2;
@@ -1741,82 +1752,58 @@
                     }
                 });
                 
-                // Apply styles: only the closest card is visible, others are blurred
+                // Apply classes: only the closest card is visible, others are blurred
                 cards.forEach(card => {
                     if (card === closestCard) {
-                        // Active card - clear and visible
-                        card.style.filter = 'blur(0px)';
-                        card.style.opacity = '1';
-                        card.style.transform = 'scale(1)';
+                        card.classList.remove('blurred');
+                        card.classList.add('active');
                     } else {
-                        // Inactive card - darker and blurred
-                        card.style.filter = 'blur(6px)';
-                        card.style.opacity = '0.3';
-                        card.style.transform = 'scale(0.96)';
+                        card.classList.remove('active');
+                        card.classList.add('blurred');
                     }
                 });
             }
             
             // Apply blur immediately to all cards except first one on init
             function initBlurState() {
-                if (!isMobile()) return;
-                
                 const cards = document.querySelectorAll('#methodology .glass-card');
+                if (!isMobile()) {
+                    cards.forEach(card => card.classList.remove('blurred', 'active'));
+                    return;
+                }
+                
                 cards.forEach((card, index) => {
                     if (index === 0) {
-                        // First card starts visible
-                        card.style.filter = 'blur(0px)';
-                        card.style.opacity = '1';
-                        card.style.transform = 'scale(1)';
+                        card.classList.remove('blurred');
+                        card.classList.add('active');
                     } else {
-                        // Other cards start blurred
-                        card.style.filter = 'blur(6px)';
-                        card.style.opacity = '0.3';
-                        card.style.transform = 'scale(0.96)';
+                        card.classList.remove('active');
+                        card.classList.add('blurred');
                     }
                 });
-            }
-            
-            // Run on scroll - with throttle for performance
-            let ticking = false;
-            function onScroll() {
-                if (!ticking) {
-                    requestAnimationFrame(() => {
-                        applyBlurEffect();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
             }
             
             // Run on scroll
             const container = document.getElementById('snap-container');
             if (container) {
-                container.addEventListener('scroll', onScroll, { passive: true });
+                container.addEventListener('scroll', applyBlurEffect, { passive: true });
             }
-            
-            // Also run on window scroll as fallback
-            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('scroll', applyBlurEffect, { passive: true });
             
             // Run on load
-            window.addEventListener('load', () => {
-                initBlurState();
-                setTimeout(applyBlurEffect, 50);
-            });
+            window.addEventListener('load', initBlurState);
+            document.addEventListener('DOMContentLoaded', initBlurState);
             
             // Run on resize
             window.addEventListener('resize', applyBlurEffect);
             
-            // Initial run - set default state immediately (before DOM is fully ready)
+            // Initial run immediately
             initBlurState();
             
-            // Run continuously for first 2 seconds to catch any timing issues
-            let initCount = 0;
-            const initInterval = setInterval(() => {
-                applyBlurEffect();
-                initCount++;
-                if (initCount >= 20) clearInterval(initInterval);
-            }, 100);
+            // Also run after short delays to catch any timing issues
+            setTimeout(initBlurState, 100);
+            setTimeout(initBlurState, 500);
+            setTimeout(initBlurState, 1000);
         })();
     </script>
 </body>
