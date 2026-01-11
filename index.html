@@ -1704,49 +1704,52 @@
             const cards = methodologySection.querySelectorAll('.glass-card');
             if (cards.length === 0) return;
             
-            // Initially blur all cards
-            cards.forEach(card => card.classList.add('blurred'));
-            
-            // Create observer to detect which card is in view
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-                        // This card is in view - unblur it
-                        entry.target.classList.remove('blurred');
-                        entry.target.classList.add('in-view');
-                        
-                        // Blur other cards
-                        cards.forEach(card => {
-                            if (card !== entry.target) {
-                                card.classList.add('blurred');
-                                card.classList.remove('in-view');
-                            }
-                        });
+            // Function to update blur based on scroll position
+            function updateCardBlur() {
+                const viewportCenter = window.innerHeight / 2;
+                
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const cardCenter = rect.top + rect.height / 2;
+                    const distanceFromCenter = Math.abs(cardCenter - viewportCenter);
+                    
+                    // If card center is within 150px of viewport center, it's "in view"
+                    if (distanceFromCenter < 150) {
+                        card.classList.remove('blurred');
+                        card.classList.add('in-view');
+                    } else {
+                        card.classList.add('blurred');
+                        card.classList.remove('in-view');
                     }
                 });
-            }, {
-                root: snapContainer,
-                threshold: 0.5
-            });
-            
-            cards.forEach(card => observer.observe(card));
-            
-            // Set first card as active initially
-            if (cards[0]) {
-                cards[0].classList.remove('blurred');
-                cards[0].classList.add('in-view');
             }
+            
+            // Listen to scroll on snap container
+            snapContainer.addEventListener('scroll', updateCardBlur, { passive: true });
+            
+            // Also listen to touchmove for smoother mobile experience
+            snapContainer.addEventListener('touchmove', updateCardBlur, { passive: true });
+            
+            // Initial update
+            updateCardBlur();
+            
+            // Update on scroll end as well
+            let scrollTimeout;
+            snapContainer.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(updateCardBlur, 100);
+            }, { passive: true });
         }
         
         // Init on load and resize
-        initProtocolCardsBlur();
+        setTimeout(initProtocolCardsBlur, 500);
+        
         window.addEventListener('resize', () => {
-            // Re-init on resize to handle orientation changes
             const cards = document.querySelectorAll('#methodology .glass-card');
             cards.forEach(card => {
                 card.classList.remove('blurred', 'in-view');
             });
-            initProtocolCardsBlur();
+            setTimeout(initProtocolCardsBlur, 100);
         });
     </script>
 </body>
