@@ -2563,7 +2563,7 @@
         });
         
         // Handle form submission
-        auditForm.addEventListener('submit', (e) => {
+        auditForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             // Get form data
@@ -2574,8 +2574,32 @@
                 phone: formData.get('phone')
             };
             
-            // Log data (you can send this to your backend/email service later)
-            console.log('Audit request:', data);
+            // Send Telegram notification to Elena
+            const telegramBotToken = '8305282189:AAF7Y12ONrHyrKmKRoc4NRCwtbvjiCdZyh4';
+            const chatId = '6784222995';
+            const message = `🎉 *Nouveau prospect Action Flow!*
+
+👤 *Nom:* ${data.name}
+📧 *Email:* ${data.email}
+📱 *Téléphone:* ${data.phone}
+
+⏰ _Rappelle ce prospect dans les prochaines 24 heures._
+
+— Elena, ton assistante virtuelle`;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } catch (error) {
+                console.error('Telegram notification error:', error);
+            }
             
             // Show thank you message
             formView.classList.add('hidden');
