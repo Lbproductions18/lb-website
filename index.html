@@ -970,7 +970,7 @@
                         class="px-4 sm:px-10 py-3 sm:py-4 rounded-full font-semibold bg-white text-black shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:scale-[1.02] transition-all duration-300 text-xs sm:text-base whitespace-nowrap">
                         Démarrer mon audit gratuit
                     </button>
-                    <button
+                    <button id="discover-protocol-btn"
                         class="px-4 sm:px-8 py-3 sm:py-4 rounded-full font-normal text-xs sm:text-sm bg-transparent border border-white/15 text-white/70 hover:text-white hover:border-white/30 transition-all duration-300 whitespace-nowrap">
                         Découvrir le protocole
                     </button>
@@ -2476,6 +2476,26 @@
                 });
             }
         });
+        
+        // "Découvrir le protocole" button - scroll to Protocol section
+        const discoverBtn = document.getElementById('discover-protocol-btn');
+        if (discoverBtn) {
+            discoverBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Find the Protocol section index in visible sections
+                const visibleSections = getVisibleSections();
+                const methodologySection = document.getElementById('methodology');
+                const sectionIndex = visibleSections.indexOf(methodologySection);
+                
+                if (sectionIndex !== -1) {
+                    scrollToSection(sectionIndex);
+                } else {
+                    // Fallback: direct scroll
+                    methodologySection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
     </script>
 </body>
 
