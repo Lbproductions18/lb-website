@@ -1425,7 +1425,10 @@
                         <span class="material-symbols-outlined text-3xl text-white">check</span>
                     </div>
                     <h3 class="text-2xl font-display font-light text-white mb-3">Merci!</h3>
-                    <p class="text-zinc-500">Je vous contacte dans les prochaines 24 heures.</p>
+                    <p class="text-zinc-500 mb-6">Je vous contacte dans les prochaines 24 heures.</p>
+                    
+                    <!-- Tagline with typewriter effect -->
+                    <p id="tagline-typewriter" class="text-lg font-display font-light text-white/80 mt-8 h-8"></p>
                 </div>
             </div>
         </div>
@@ -2400,9 +2403,69 @@
             formView.classList.add('hidden');
             thankyouView.classList.remove('hidden');
             
-            // Auto-close after 3 seconds
-            setTimeout(closeModal, 3000);
+            // Reset tagline
+            const taglineEl = document.getElementById('tagline-typewriter');
+            taglineEl.innerHTML = '';
+            
+            // Start tagline typewriter after a delay
+            setTimeout(() => {
+                typeTagline(taglineEl);
+            }, 1500);
+            
+            // Auto-close after 6 seconds (more time for tagline)
+            setTimeout(closeModal, 6000);
         });
+        
+        // Tagline typewriter effect
+        function typeTagline(element) {
+            const text1 = 'Prenez ';
+            const glowWord1 = 'action';
+            const text2 = '. Entrez dans le ';
+            const glowWord2 = 'flow';
+            const text3 = '.';
+            
+            const fullSequence = [
+                { text: text1, glow: false },
+                { text: glowWord1, glow: true },
+                { text: text2, glow: false },
+                { text: glowWord2, glow: true },
+                { text: text3, glow: false }
+            ];
+            
+            let currentPart = 0;
+            let currentChar = 0;
+            let currentHTML = '';
+            
+            function typeNext() {
+                if (currentPart >= fullSequence.length) return;
+                
+                const part = fullSequence[currentPart];
+                
+                if (currentChar < part.text.length) {
+                    const char = part.text[currentChar];
+                    
+                    if (currentChar === 0 && part.glow) {
+                        currentHTML += '<span class="text-glow-intense text-white">';
+                    }
+                    
+                    currentHTML += char;
+                    
+                    if (currentChar === part.text.length - 1 && part.glow) {
+                        currentHTML += '</span>';
+                    }
+                    
+                    element.innerHTML = currentHTML + '<span class="typewriter-cursor">|</span>';
+                    currentChar++;
+                    setTimeout(typeNext, 60);
+                } else {
+                    currentPart++;
+                    currentChar = 0;
+                    setTimeout(typeNext, 30);
+                }
+            }
+            
+            typeNext();
+        }
         
         // Attach to all CTA buttons
         document.querySelectorAll('button').forEach(btn => {
