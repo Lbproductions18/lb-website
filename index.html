@@ -391,6 +391,21 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        /* ===== FORM INPUTS DARK MODE ===== */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.7) inset !important;
+            -webkit-text-fill-color: white !important;
+            caret-color: white;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
         /* ===== GLOWING TEXT ===== */
         .text-glow {
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
@@ -1379,19 +1394,22 @@
                         <div>
                             <label class="block text-[10px] tracking-[0.2em] uppercase text-white/40 mb-2 font-bold">Nom complet *</label>
                             <input type="text" name="name" required 
-                                class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 transition-colors"
+                                class="w-full bg-black/50 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-white/50 focus:bg-black/70 transition-all"
+                                style="color-scheme: dark;"
                                 placeholder="Votre nom">
                         </div>
                         <div>
                             <label class="block text-[10px] tracking-[0.2em] uppercase text-white/40 mb-2 font-bold">Courriel *</label>
                             <input type="email" name="email" required 
-                                class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 transition-colors"
+                                class="w-full bg-black/50 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-white/50 focus:bg-black/70 transition-all"
+                                style="color-scheme: dark;"
                                 placeholder="votre@courriel.com">
                         </div>
                         <div>
                             <label class="block text-[10px] tracking-[0.2em] uppercase text-white/40 mb-2 font-bold">Téléphone *</label>
                             <input type="tel" name="phone" required 
-                                class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 transition-colors"
+                                class="w-full bg-black/50 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-white/50 focus:bg-black/70 transition-all"
+                                style="color-scheme: dark;"
                                 placeholder="(514) 555-1234">
                         </div>
                         <button type="submit" 
