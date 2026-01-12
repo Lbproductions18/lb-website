@@ -1354,6 +1354,67 @@
         </footer>
 
     </div><!-- End snap-container -->
+    
+    <!-- Audit Form Modal -->
+    <div id="audit-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div id="modal-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+        
+        <!-- Modal Content -->
+        <div id="modal-content" class="relative w-full max-w-md transform scale-95 opacity-0 transition-all duration-300">
+            <div class="glass-card rounded-[2rem] p-8 md:p-10 relative overflow-hidden">
+                <!-- Glow effect -->
+                <div class="absolute -top-20 -right-20 w-60 h-60 bg-white/[0.03] blur-[100px] rounded-full pointer-events-none"></div>
+                
+                <!-- Close button -->
+                <button id="modal-close" class="absolute top-4 right-4 text-white/40 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+                
+                <!-- Form View -->
+                <div id="form-view">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-display font-light text-white mb-2">Démarrer votre audit</h3>
+                        <p class="text-sm text-zinc-500">Remplissez le formulaire et je vous contacte sous 24h.</p>
+                    </div>
+                    
+                    <form id="audit-form" class="space-y-5">
+                        <div>
+                            <label class="block text-[10px] tracking-[0.2em] uppercase text-white/40 mb-2 font-bold">Nom complet *</label>
+                            <input type="text" name="name" required 
+                                class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 transition-colors"
+                                placeholder="Votre nom">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] tracking-[0.2em] uppercase text-white/40 mb-2 font-bold">Courriel *</label>
+                            <input type="email" name="email" required 
+                                class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 transition-colors"
+                                placeholder="votre@courriel.com">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] tracking-[0.2em] uppercase text-white/40 mb-2 font-bold">Téléphone *</label>
+                            <input type="tel" name="phone" required 
+                                class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 transition-colors"
+                                placeholder="(514) 555-1234">
+                        </div>
+                        <button type="submit" 
+                            class="w-full mt-6 px-8 py-4 rounded-full font-semibold bg-white text-black shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:scale-[1.02] transition-all duration-300">
+                            Envoyer ma demande
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Thank You View -->
+                <div id="thankyou-view" class="hidden text-center py-8">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-white/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-3xl text-white">check</span>
+                    </div>
+                    <h3 class="text-2xl font-display font-light text-white mb-3">Merci!</h3>
+                    <p class="text-zinc-500">Je vous contacte dans les prochaines 24 heures.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // ===== MESH GRADIENT BACKGROUND =====
@@ -2253,6 +2314,90 @@
             // Start footer typewriter
             setTimeout(footerTypeWriter, 1200);
         })();
+        
+        // ===== AUDIT MODAL =====
+        const auditModal = document.getElementById('audit-modal');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalContent = document.getElementById('modal-content');
+        const modalClose = document.getElementById('modal-close');
+        const auditForm = document.getElementById('audit-form');
+        const formView = document.getElementById('form-view');
+        const thankyouView = document.getElementById('thankyou-view');
+        
+        // Open modal
+        function openModal() {
+            auditModal.classList.remove('hidden');
+            auditModal.classList.add('flex');
+            // Trigger animation
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            // Disable body scroll
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close modal
+        function closeModal() {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                auditModal.classList.add('hidden');
+                auditModal.classList.remove('flex');
+                // Reset form
+                formView.classList.remove('hidden');
+                thankyouView.classList.add('hidden');
+                auditForm.reset();
+                // Re-enable body scroll
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        
+        // Close on backdrop click
+        modalBackdrop.addEventListener('click', closeModal);
+        
+        // Close on X button
+        modalClose.addEventListener('click', closeModal);
+        
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !auditModal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+        
+        // Handle form submission
+        auditForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(auditForm);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone')
+            };
+            
+            // Log data (you can send this to your backend/email service later)
+            console.log('Audit request:', data);
+            
+            // Show thank you message
+            formView.classList.add('hidden');
+            thankyouView.classList.remove('hidden');
+            
+            // Auto-close after 3 seconds
+            setTimeout(closeModal, 3000);
+        });
+        
+        // Attach to all CTA buttons
+        document.querySelectorAll('button').forEach(btn => {
+            if (btn.textContent.includes('Démarrer mon audit gratuit')) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal();
+                });
+            }
+        });
     </script>
 </body>
 
