@@ -2573,31 +2573,15 @@
                 phone: formData.get('phone')
             };
             
-            // Send Telegram notification to Elena
-            const telegramBotToken = '8305282189:AAF7Y12ONrHyrKmKRoc4NRCwtbvjiCdZyh4';
-            const chatId = '6784222995';
-            const message = `🎉 *Nouveau prospect Action Flow!*
-
-👤 *Nom:* ${data.name}
-📧 *Email:* ${data.email}
-📱 *Téléphone:* ${data.phone}
-
-⏰ _Rappelle ce prospect dans les prochaines 24 heures._
-
-— Elena, ton assistante virtuelle`;
-
+            // Send notification via secure Netlify Function
             try {
-                await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+                await fetch('/.netlify/functions/send-telegram', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        text: message,
-                        parse_mode: 'Markdown'
-                    })
+                    body: JSON.stringify(data)
                 });
             } catch (error) {
-                console.error('Telegram notification error:', error);
+                console.error('Notification error:', error);
             }
             
             // Show thank you message
