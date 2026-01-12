@@ -480,6 +480,19 @@
             }
         }
 
+        /* ===== FAQ ACCORDION ===== */
+        .faq-accordion details[open] summary .material-symbols-outlined {
+            transform: rotate(180deg);
+        }
+        
+        .faq-accordion details summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        .faq-accordion details summary {
+            list-style: none;
+        }
+
         /* ===== REVEAL ANIMATIONS ===== */
         .reveal-text {
             opacity: 0;
@@ -911,7 +924,8 @@
         <div class="section-nav-dot" data-section="3" data-label="Protocol"></div>
         <div class="section-nav-dot" data-section="4" data-label="Pour vous"></div>
         <div class="section-nav-dot lg:hidden" data-section="5" data-label="Pas adapté"></div>
-        <div class="section-nav-dot" data-section="6" data-label="Contact"></div>
+        <div class="section-nav-dot" data-section="6" data-label="FAQ"></div>
+        <div class="section-nav-dot" data-section="7" data-label="Contact"></div>
     </div>
 
     <!-- Snap Scroll Container -->
@@ -1325,8 +1339,76 @@
             </div>
         </section>
 
+        <!-- FAQ Section -->
+        <section class="snap-section py-20 md:py-32 relative flex items-center" id="faq" data-section="6">
+            <div class="max-w-4xl mx-auto px-6 w-full">
+                <div class="mb-12 md:mb-20 text-center">
+                    <span class="text-[10px] tracking-[0.5em] text-white/40 uppercase font-bold mb-4 block">Questions fréquentes</span>
+                    <h2 class="reveal-text text-3xl md:text-4xl font-display font-light text-white">Vous vous demandez peut-être...</h2>
+                </div>
+                
+                <div class="space-y-4 faq-accordion">
+                    <!-- FAQ 1 -->
+                    <details class="group glass-card rounded-2xl overflow-hidden transition-all duration-300">
+                        <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer">
+                            <span class="text-base md:text-lg text-white font-light tracking-tight pr-4">Est-ce que je dois connaître l'IA pour travailler avec vous ?</span>
+                            <span class="material-symbols-outlined text-white/40 transition-transform duration-300 flex-shrink-0">expand_more</span>
+                        </summary>
+                        <div class="px-6 md:px-8 pb-6 md:pb-8">
+                            <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+                            <p class="text-zinc-500 font-light leading-relaxed">
+                                Absolument pas. Mon rôle est de traduire la complexité technologique en outils simples et intuitifs. Votre expertise métier reste au centre de la solution — l'IA n'est qu'un accélérateur invisible.
+                            </p>
+                        </div>
+                    </details>
+                    
+                    <!-- FAQ 2 -->
+                    <details class="group glass-card rounded-2xl overflow-hidden transition-all duration-300">
+                        <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer">
+                            <span class="text-base md:text-lg text-white font-light tracking-tight pr-4">Est-ce que tout est automatisable ?</span>
+                            <span class="material-symbols-outlined text-white/40 transition-transform duration-300 flex-shrink-0">expand_more</span>
+                        </summary>
+                        <div class="px-6 md:px-8 pb-6 md:pb-8">
+                            <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+                            <p class="text-zinc-500 font-light leading-relaxed">
+                                Non, et tout ne devrait pas l'être. J'automatise les tâches répétitives à faible valeur pour libérer votre temps sur les décisions stratégiques. Ce qui est critique et humain, on n'y touche pas — on l'assiste.
+                            </p>
+                        </div>
+                    </details>
+                    
+                    <!-- FAQ 3 -->
+                    <details class="group glass-card rounded-2xl overflow-hidden transition-all duration-300">
+                        <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer">
+                            <span class="text-base md:text-lg text-white font-light tracking-tight pr-4">Combien de temps dure une implémentation ?</span>
+                            <span class="material-symbols-outlined text-white/40 transition-transform duration-300 flex-shrink-0">expand_more</span>
+                        </summary>
+                        <div class="px-6 md:px-8 pb-6 md:pb-8">
+                            <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+                            <p class="text-zinc-500 font-light leading-relaxed">
+                                Un cycle complet (Diagnostic → Conception → Implémentation) prend généralement entre 6 et 12 semaines, selon la complexité de votre écosystème actuel et vos objectifs.
+                            </p>
+                        </div>
+                    </details>
+                    
+                    <!-- FAQ 4 -->
+                    <details class="group glass-card rounded-2xl overflow-hidden transition-all duration-300">
+                        <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer">
+                            <span class="text-base md:text-lg text-white font-light tracking-tight pr-4">Y a-t-il un suivi après le déploiement ?</span>
+                            <span class="material-symbols-outlined text-white/40 transition-transform duration-300 flex-shrink-0">expand_more</span>
+                        </summary>
+                        <div class="px-6 md:px-8 pb-6 md:pb-8">
+                            <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+                            <p class="text-zinc-500 font-light leading-relaxed">
+                                Oui. Chaque déploiement inclut une période de suivi et d'ajustements. Des forfaits de maintenance sont aussi disponibles pour une optimisation continue de vos systèmes.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
         <!-- Footer CTA -->
-        <footer class="snap-section relative min-h-screen flex flex-col" data-section="6">
+        <footer class="snap-section relative min-h-screen flex flex-col" data-section="7">
             <!-- Main CTA Content - Truly Centered -->
             <div class="flex-1 flex items-center justify-center px-6 py-8">
                 <div class="max-w-4xl mx-auto text-center space-y-8">
