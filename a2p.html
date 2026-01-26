@@ -7,7 +7,28 @@
     <title>Vérification - Action Flow</title>
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23030303'/%3E%3Ccircle cx='16' cy='16' r='5' fill='white'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='1'/%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "secondary": "#a1a1aa",
+                        "accent": "#e4e4e7",
+                        "dark-obsidian": "#030303",
+                        "glass-white": "rgba(255, 255, 255, 0.02)",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "sans": ["Plus Jakarta Sans", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
     <style>
         * {
             margin: 0;
@@ -20,34 +41,66 @@
             color: #e4e4e7;
             font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== MESH GRADIENT BACKGROUND ===== */
+        #mesh-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.8;
+        }
+
+        /* ===== PARTICLE NETWORK ===== */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.25;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
         }
 
-        .container {
-            width: 100%;
-            max-width: 600px;
+        /* Glass card thin - for logo */
+        .glass-card-thin {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .logo {
-            text-align: center;
+        .logo-container {
             margin-bottom: 32px;
         }
 
-        .logo svg {
-            width: 48px;
-            height: 48px;
-        }
-
         .form-container {
+            width: 100%;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
             padding: 8px;
             min-height: 850px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         .form-container iframe {
@@ -57,6 +110,7 @@
         /* Debug panel - hidden by default */
         .debug-panel {
             display: none;
+            width: 100%;
             margin-top: 24px;
             padding: 16px;
             background: rgba(255, 255, 255, 0.02);
@@ -64,6 +118,8 @@
             border-radius: 12px;
             font-size: 12px;
             font-family: monospace;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         .debug-panel.show {
@@ -106,15 +162,25 @@
     </style>
 </head>
 
-<body>
+<body class="font-sans">
+    <!-- Mesh Gradient Canvas -->
+    <canvas id="mesh-canvas"></canvas>
+
+    <!-- Particle Network Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
     <div class="container">
-        <!-- Logo -->
-        <div class="logo">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="32" height="32" rx="6" fill="#030303"/>
-                <circle cx="16" cy="16" r="5" fill="white"/>
-                <circle cx="16" cy="16" r="8" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-            </svg>
+        <!-- Logo - Same as main site -->
+        <div class="logo-container">
+            <div class="flex items-center glass-card-thin px-6 py-3 rounded-2xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
+                        <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    </div>
+                    <span class="text-lg font-display font-medium tracking-tight text-white">ACTION<span
+                            class="opacity-40">.FLOW</span></span>
+                </div>
+            </div>
         </div>
 
         <!-- Form Container -->
@@ -146,8 +212,221 @@
     </div>
 
     <script src="https://link.msgsndr.com/js/form_embed.js"></script>
+    
     <script>
-        // Parse and display URL parameters
+        // ===== MESH GRADIENT BACKGROUND =====
+        const meshCanvas = document.getElementById('mesh-canvas');
+        const meshCtx = meshCanvas.getContext('2d');
+        let mouseX = 0.5;
+        let mouseY = 0.5;
+        let targetMouseX = 0.5;
+        let targetMouseY = 0.5;
+
+        function resizeMeshCanvas() {
+            meshCanvas.width = window.innerWidth;
+            meshCanvas.height = window.innerHeight;
+        }
+        resizeMeshCanvas();
+        window.addEventListener('resize', resizeMeshCanvas);
+
+        // Aurora Mists - Pure white/grey tones
+        const orbs = [
+            { x: 0.15, y: 0.1, vx: 0.0001, vy: 0.00008, radius: 0.7, color: 'rgba(255, 255, 255, 0.04)' },
+            { x: 0.85, y: 0.2, vx: -0.00008, vy: 0.0001, radius: 0.6, color: 'rgba(255, 255, 255, 0.03)' },
+            { x: 0.5, y: 0.6, vx: 0.00008, vy: -0.00008, radius: 0.65, color: 'rgba(255, 255, 255, 0.035)' },
+            { x: 0.2, y: 0.85, vx: 0.0001, vy: 0.00006, radius: 0.5, color: 'rgba(255, 255, 255, 0.03)' },
+            { x: 0.7, y: 0.7, vx: -0.00006, vy: -0.0001, radius: 0.45, color: 'rgba(255, 255, 255, 0.025)' },
+        ];
+
+        document.addEventListener('mousemove', (e) => {
+            targetMouseX = e.clientX / window.innerWidth;
+            targetMouseY = e.clientY / window.innerHeight;
+        });
+
+        function drawMeshGradient() {
+            meshCtx.fillStyle = '#030303';
+            meshCtx.fillRect(0, 0, meshCanvas.width, meshCanvas.height);
+
+            // Smooth mouse tracking
+            mouseX += (targetMouseX - mouseX) * 0.02;
+            mouseY += (targetMouseY - mouseY) * 0.02;
+
+            orbs.forEach((orb, i) => {
+                // Organic movement
+                orb.x += orb.vx + Math.sin(Date.now() * 0.0001 + i) * 0.0001;
+                orb.y += orb.vy + Math.cos(Date.now() * 0.00012 + i) * 0.0001;
+
+                // Mouse influence
+                const dx = mouseX - orb.x;
+                const dy = mouseY - orb.y;
+                orb.x += dx * 0.001;
+                orb.y += dy * 0.001;
+
+                // Bounce at edges
+                if (orb.x < 0 || orb.x > 1) orb.vx *= -1;
+                if (orb.y < 0 || orb.y > 1) orb.vy *= -1;
+                orb.x = Math.max(0, Math.min(1, orb.x));
+                orb.y = Math.max(0, Math.min(1, orb.y));
+
+                // Draw gradient
+                const gradient = meshCtx.createRadialGradient(
+                    orb.x * meshCanvas.width, orb.y * meshCanvas.height, 0,
+                    orb.x * meshCanvas.width, orb.y * meshCanvas.height, orb.radius * Math.max(meshCanvas.width, meshCanvas.height)
+                );
+                gradient.addColorStop(0, orb.color);
+                gradient.addColorStop(1, 'transparent');
+                meshCtx.fillStyle = gradient;
+                meshCtx.fillRect(0, 0, meshCanvas.width, meshCanvas.height);
+            });
+
+            requestAnimationFrame(drawMeshGradient);
+        }
+        drawMeshGradient();
+
+        // ===== PARTICLE NETWORK =====
+        const particleCanvas = document.getElementById('particle-canvas');
+        const particleCtx = particleCanvas.getContext('2d');
+
+        function resizeParticleCanvas() {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+        }
+        resizeParticleCanvas();
+        window.addEventListener('resize', resizeParticleCanvas);
+
+        // Floating nodes
+        const nodes = [];
+        const nodeCount = 20;
+        const connectionDistance = 180;
+
+        const dataWords = ['SYNC', 'DATA', 'FLOW', 'NODE', 'HASH', 'TASK', 'LOAD', 'PIPE', 'CORE', 'FLUX'];
+
+        class Node {
+            constructor(index) {
+                this.x = Math.random() * particleCanvas.width;
+                this.y = Math.random() * particleCanvas.height;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.radius = 2 + Math.random() * 2;
+                this.depth = Math.random();
+                this.label = dataWords[index % dataWords.length];
+                this.hasLabel = Math.random() > 0.6;
+                this.floatOffset = Math.random() * Math.PI * 2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.x += Math.sin(Date.now() * 0.0005 + this.floatOffset) * 0.2;
+                this.y += Math.cos(Date.now() * 0.0004 + this.floatOffset) * 0.2;
+
+                if (this.x < 50) this.vx = Math.abs(this.vx);
+                if (this.x > particleCanvas.width - 50) this.vx = -Math.abs(this.vx);
+                if (this.y < 50) this.vy = Math.abs(this.vy);
+                if (this.y > particleCanvas.height - 50) this.vy = -Math.abs(this.vy);
+            }
+
+            draw() {
+                particleCtx.beginPath();
+                particleCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                particleCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                particleCtx.fill();
+
+                particleCtx.beginPath();
+                particleCtx.arc(this.x, this.y, this.radius + 2, 0, Math.PI * 2);
+                particleCtx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+                particleCtx.lineWidth = 1;
+                particleCtx.stroke();
+
+                if (this.hasLabel) {
+                    particleCtx.font = '8px monospace';
+                    particleCtx.textAlign = 'center';
+                    particleCtx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                    particleCtx.fillText(this.label, this.x, this.y + this.radius + 12);
+                }
+            }
+        }
+
+        for (let i = 0; i < nodeCount; i++) {
+            nodes.push(new Node(i));
+        }
+
+        // Star dust
+        const starDust = [];
+        const starCount = 60;
+
+        class StarParticle {
+            constructor() {
+                this.x = Math.random() * particleCanvas.width;
+                this.y = Math.random() * particleCanvas.height;
+                this.radius = 0.5 + Math.random() * 1.5;
+                this.twinkle = Math.random() > 0.85;
+                this.twinkleSpeed = 0.002 + Math.random() * 0.003;
+                this.twinkleOffset = Math.random() * Math.PI * 2;
+                this.vy = (Math.random() - 0.5) * 0.15;
+            }
+
+            update() {
+                this.y += this.vy;
+                if (this.y < 0) this.y = particleCanvas.height;
+                if (this.y > particleCanvas.height) this.y = 0;
+            }
+
+            draw() {
+                let opacity = 0.2;
+                if (this.twinkle) {
+                    opacity *= 0.5 + Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset) * 0.5;
+                }
+                particleCtx.beginPath();
+                particleCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                particleCtx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+                particleCtx.fill();
+            }
+        }
+
+        for (let i = 0; i < starCount; i++) {
+            starDust.push(new StarParticle());
+        }
+
+        function drawParticles() {
+            particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+            // Draw connections
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        const opacity = (1 - distance / connectionDistance) * 0.15;
+                        particleCtx.beginPath();
+                        particleCtx.moveTo(nodes[i].x, nodes[i].y);
+                        particleCtx.lineTo(nodes[j].x, nodes[j].y);
+                        particleCtx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                        particleCtx.lineWidth = 0.5;
+                        particleCtx.stroke();
+                    }
+                }
+            }
+
+            // Update and draw nodes
+            nodes.forEach(node => {
+                node.update();
+                node.draw();
+            });
+
+            // Update and draw stars
+            starDust.forEach(star => {
+                star.update();
+                star.draw();
+            });
+
+            requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
+
+        // ===== URL PARAMETERS HANDLING =====
         (function() {
             const params = new URLSearchParams(window.location.search);
             const debugPanel = document.getElementById('debugPanel');
