@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="dark" lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Vérification - Action Flow</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23030303'/%3E%3Ccircle cx='16' cy='16' r='5' fill='white'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='1'/%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #030303;
+            color: #e4e4e7;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo svg {
+            width: 48px;
+            height: 48px;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 8px;
+            min-height: 850px;
+        }
+
+        .form-container iframe {
+            border-radius: 12px;
+        }
+
+        /* Debug panel - hidden by default */
+        .debug-panel {
+            display: none;
+            margin-top: 24px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        .debug-panel.show {
+            display: block;
+        }
+
+        .debug-panel h3 {
+            color: #a1a1aa;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .param-item {
+            display: flex;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .param-item:last-child {
+            border-bottom: none;
+        }
+
+        .param-key {
+            color: #71717a;
+            min-width: 120px;
+        }
+
+        .param-value {
+            color: #22c55e;
+            word-break: break-all;
+        }
+
+        .no-params {
+            color: #71717a;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="32" height="32" rx="6" fill="#030303"/>
+                <circle cx="16" cy="16" r="5" fill="white"/>
+                <circle cx="16" cy="16" r="8" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+            </svg>
+        </div>
+
+        <!-- Form Container -->
+        <div class="form-container">
+            <iframe
+                src="https://api.leadconnectorhq.com/widget/form/TGfcfFMO2CEaiJ9NzGmy"
+                style="width:100%;height:100%;border:none;border-radius:3px"
+                id="inline-TGfcfFMO2CEaiJ9NzGmy" 
+                data-layout="{'id':'INLINE'}"
+                data-trigger-type="alwaysShow"
+                data-trigger-value=""
+                data-activation-type="alwaysActivated"
+                data-activation-value=""
+                data-deactivation-type="neverDeactivate"
+                data-deactivation-value=""
+                data-form-name="Form 0"
+                data-height="815"
+                data-layout-iframe-id="inline-TGfcfFMO2CEaiJ9NzGmy"
+                data-form-id="TGfcfFMO2CEaiJ9NzGmy"
+                title="Form 0"
+            ></iframe>
+        </div>
+
+        <!-- Debug Panel - Shows URL params when ?debug=true -->
+        <div class="debug-panel" id="debugPanel">
+            <h3>Paramètres URL détectés</h3>
+            <div id="paramsList"></div>
+        </div>
+    </div>
+
+    <script src="https://link.msgsndr.com/js/form_embed.js"></script>
+    <script>
+        // Parse and display URL parameters
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const debugPanel = document.getElementById('debugPanel');
+            const paramsList = document.getElementById('paramsList');
+            
+            // Show debug panel if ?debug=true
+            if (params.get('debug') === 'true') {
+                debugPanel.classList.add('show');
+                
+                const entries = Array.from(params.entries()).filter(([key]) => key !== 'debug');
+                
+                if (entries.length === 0) {
+                    paramsList.innerHTML = '<div class="no-params">Aucun paramètre détecté</div>';
+                } else {
+                    paramsList.innerHTML = entries.map(([key, value]) => `
+                        <div class="param-item">
+                            <span class="param-key">${key}</span>
+                            <span class="param-value">${value}</span>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Pass URL parameters to the iframe
+            const iframe = document.getElementById('inline-TGfcfFMO2CEaiJ9NzGmy');
+            if (iframe && params.toString()) {
+                const currentSrc = iframe.src;
+                const separator = currentSrc.includes('?') ? '&' : '?';
+                iframe.src = currentSrc + separator + params.toString();
+            }
+        })();
+    </script>
+</body>
+
+</html>
